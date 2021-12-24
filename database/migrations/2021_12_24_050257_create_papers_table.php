@@ -22,6 +22,7 @@ class CreatePapersTable extends Migration
             $table->date('issuance_date');
             $table->string('place_of_birth', 100);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -19,6 +21,7 @@ class User extends Authenticatable
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -72,6 +75,16 @@ class User extends Authenticatable
     }
 
     /**
+     * User has a Paper
+     *
+     * @return HasOneThrough
+     */
+    public function paper(): HasOneThrough
+    {
+        return $this->hasOneThrough(Paper::class, Person::class);
+    }
+
+    /**
      * User has a Person
      *
      * @return HasOne
@@ -89,5 +102,16 @@ class User extends Authenticatable
     public function legalRepresentativePerson(): HasOneThrough
     {
         return $this->hasOneThrough(Person::class, LegalRepresentative::class);
+    }
+
+    /**
+     * Scope a query to only include active users.
+     *
+     * @param Builder $query
+     * @return void
+     */
+    public function scopeActive(Builder $query): void
+    {
+        $query->where('active', true);
     }
 }
