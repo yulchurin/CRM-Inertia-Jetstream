@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -58,4 +60,34 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    /**
+     * User has a Person
+     *
+     * @return HasOne
+     */
+    public function person(): HasOne
+    {
+        return $this->hasOne(Person::class);
+    }
+
+    /**
+     * User has a Person
+     *
+     * @return HasOne
+     */
+    public function legalRepresentative(): HasOne
+    {
+        return $this->hasOne(LegalRepresentative::class);
+    }
+
+    /**
+     * Returns parent's or legal representative's personality
+     *
+     * @return HasOneThrough
+     */
+    public function legalRepresentativePerson(): HasOneThrough
+    {
+        return $this->hasOneThrough(Person::class, LegalRepresentative::class);
+    }
 }
