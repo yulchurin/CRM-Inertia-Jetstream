@@ -14,7 +14,7 @@ class CertificateFactory extends Factory
     public function definition()
     {
         return [
-            'number' => $this->faker->numerify('FAKE############'),
+            'number' => $this->faker->numerify('############'),
             'final_grade' => $this->faker->numberBetween(3, 5),
         ];
     }
