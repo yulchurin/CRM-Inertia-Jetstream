@@ -35,12 +35,12 @@ class CreatePersonsTable extends Migration
             $table->date('date_of_birth');
             $table->string('phone', 16)->unique();
 
-            $table->string('zip', 10)->nullable();
-            $table->string('region', 50)->nullable();
-            $table->string('city', 50)->nullable();
-            $table->string('street', 50)->nullable();
-            $table->string('house', 15)->nullable();
-            $table->string('flat', 10)->nullable();
+            $table->string('zip', 50)->nullable();
+            $table->string('region', 255)->nullable();
+            $table->string('city', 255)->nullable();
+            $table->string('street', 255)->nullable();
+            $table->string('house', 50)->nullable();
+            $table->string('flat', 50)->nullable();
 
             $table->timestamps();
             $table->softDeletes();

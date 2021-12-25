@@ -19,14 +19,14 @@ class PersonFactory extends Factory
      *
      * @return array
      */
-    public function definition()
+    public function definition(): array
     {
         return [
             'gender' => $this->faker->boolean(),
             'last_name' => $this->faker->lastName(),
             'first_name' => $this->faker->firstName(),
             'middle_name' => $this->faker->firstNameMale(),
-            'date_of_birth' => $this->faker->date(),
+            'date_of_birth' => $this->faker->dateTimeBetween('-70 years', '-17 years'),
             'phone' => $this->faker->e164PhoneNumber(),
             'zip' => $this->faker->postcode(),
             'region' => $this->faker->country(),

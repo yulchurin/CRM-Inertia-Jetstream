@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Role;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -13,7 +15,6 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
-use App\Models\Role;
 
 class User extends Authenticatable
 {
@@ -103,6 +104,35 @@ class User extends Authenticatable
     public function legalRepresentativePerson(): HasOneThrough
     {
         return $this->hasOneThrough(Person::class, LegalRepresentative::class)->with('paper');
+    }
+
+    /**
+     * Certificate relation
+     *
+     * @return HasOne
+     */
+    public function certificate(): HasOne
+    {
+        return $this->hasOne(Certificate::class);
+    }
+
+
+    /**
+     * Returns certificate only if user role is Graduated
+     *
+     * @throws Exception
+     */
+    public function availableCertificate(): HasOne|string
+    {
+        if ($this->role !== Role::GRADUATED) {
+            throw new Exception('only a graduate can have a certificate');
+        }
+
+        try {
+            return $this->certificate();
+        } catch (Exception $exception) {
+            return $exception->getMessage();
+        }
     }
 
     /**
