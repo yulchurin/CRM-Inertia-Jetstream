@@ -19,9 +19,8 @@ class GraduatedSeeder extends Seeder
     public function run()
     {
         User::factory(10)
-            ->sequence(fn () => ['role' => Role::GRADUATED])
             ->has(Person::factory()->count(1)->has(Paper::factory()->count(1)))
             ->has(Certificate::factory()->count(1))
-            ->create();
+            ->create(['role' => Role::GRADUATED]);
     }
 }

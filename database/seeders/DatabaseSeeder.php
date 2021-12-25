@@ -15,17 +15,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        User::factory()->count(1)
-            ->sequence(fn () => [
+        User::factory(1)
+            ->create([
                 'email' => 'admin@this.test',
                 'role' => Role::ADMIN,
-            ])->create();
+                'active' => true,
+            ]);
 
-        User::factory()->count(1)
-            ->sequence(fn () => [
+        User::factory(1)
+            ->create([
                 'email' => 'assistant@this.test',
                 'role' => Role::ASSISTANT,
-            ])->create();
+                'active' => true,
+            ]);
 
         $this->call([
             CompanySeeder::class,

@@ -21,12 +21,11 @@ class StudentSeeder extends Seeder
         $faker = Factory::create();
 
         User::factory(10)
-            ->sequence(fn () => ['role' => Role::STUDENT])
             ->has(Person::factory()->count(1)
                 ->sequence(
                     fn () => ['date_of_birth' => $faker->dateTimeBetween('-60 years', '-19 years')]
                 )
                 ->has(Paper::factory()->count(1)))
-            ->create();
+            ->create(['role' => Role::STUDENT]);
     }
 }
