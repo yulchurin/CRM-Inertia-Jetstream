@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -10,9 +9,11 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Role;
 
 class User extends Authenticatable
 {
@@ -101,7 +102,7 @@ class User extends Authenticatable
      */
     public function legalRepresentativePerson(): HasOneThrough
     {
-        return $this->hasOneThrough(Person::class, LegalRepresentative::class);
+        return $this->hasOneThrough(Person::class, LegalRepresentative::class)->with('paper');
     }
 
     /**
@@ -113,5 +114,25 @@ class User extends Authenticatable
     public function scopeActive(Builder $query): void
     {
         $query->where('active', true);
+    }
+
+    /**
+     * Check user's role: Admin or Not
+     *
+     * @return boolean
+     */
+    public function isAdmin(): bool
+    {
+        return Auth::user()->role === Role::ADMIN;
+    }
+
+    /**
+     * Check user's role: Assistant or Not
+     *
+     * @return boolean
+     */
+    public function isAssistant(): bool
+    {
+        return Auth::user()->role === Role::ASSISTANT;
     }
 }

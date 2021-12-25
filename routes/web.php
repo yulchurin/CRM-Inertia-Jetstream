@@ -29,8 +29,12 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 })->name('dashboard');
 
 Route::middleware(['auth:sanctum', 'user.active'])->get('/person', function () {
+
     return Inertia::render('Profile/Person', [
         'person' => auth()->user()->person,
         'passport' => auth()->user()->paper,
+        'parent' => auth()->user()->legalRepresentativePerson,
+        'parent_pass' => auth()->user()->legalRepresentativePerson->paper,
     ]);
+
 })->name('person');

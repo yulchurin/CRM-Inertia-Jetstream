@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,13 +16,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string series
  * @property string number
  * @property string issuer
- * @property mixed issuance_date
+ * @property Carbon issuance_date
  * @property string place_of_birth
  */
 class Paper extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
+    protected $dates = ['issuance_date'];
 
     /**
      * The attributes that are mass assignable.

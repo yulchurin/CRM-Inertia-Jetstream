@@ -28,12 +28,12 @@ class PersonFactory extends Factory
             'middle_name' => $this->faker->firstNameMale(),
             'date_of_birth' => $this->faker->date(),
             'phone' => $this->faker->e164PhoneNumber(),
-            'address_zip' => $this->faker->postcode(),
-            'address_region' => $this->faker->country(),
-            'address_city' => $this->faker->city(),
-            'address_street' => $this->faker->streetAddress(),
-            'address_house' => $this->faker->buildingNumber(),
-            'address_flat' => $this->faker->buildingNumber(),
+            'zip' => $this->faker->postcode(),
+            'region' => $this->faker->country(),
+            'city' => $this->faker->city(),
+            'street' => $this->faker->streetAddress(),
+            'house' => $this->faker->buildingNumber(),
+            'flat' => $this->faker->buildingNumber(),
         ];
     }
 }
