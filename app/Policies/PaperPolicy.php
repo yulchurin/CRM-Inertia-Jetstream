@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Person;
+use App\Models\Paper;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class PersonPolicy
+class PaperPolicy
 {
     use HandlesAuthorization;
 
@@ -25,13 +25,12 @@ class PersonPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Person  $person
+     * @param  \App\Models\Paper  $paper
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Person $person)
+    public function view(User $user, Paper $paper)
     {
-        return ($user->legalRepresentative()->id === $person->legal_representative_id)
-            || ($user->id === $person->user_id);
+        //
     }
 
     /**
@@ -42,33 +41,32 @@ class PersonPolicy
      */
     public function create(User $user)
     {
-        return (! $user->person()->exists());
-        //$user->person()
-        //todo: if age was under 18 when the group was started
-        // then user can create a person as a legal representative
-        // JUST ONE Person and JUST ONE LEGAL REPRESENTATIVE !
+        return ! $user->paper()->exists();
+        //todo: if underage
+        // can create one more passport that will ve created when Legal Representative was created
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Person  $person
+     * @param  \App\Models\Paper  $paper
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Person $person)
+    public function update(User $user, Paper $paper)
     {
-        //
+        return $user->person()->id === $paper->person_id
+            || $user->legalRepresentativePerson()->id === $paper->person_id;
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Person  $person
+     * @param  \App\Models\Paper  $paper
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Person $person)
+    public function delete(User $user, Paper $paper)
     {
         //
     }
@@ -77,10 +75,10 @@ class PersonPolicy
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Person  $person
+     * @param  \App\Models\Paper  $paper
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Person $person)
+    public function restore(User $user, Paper $paper)
     {
         //
     }
@@ -89,10 +87,10 @@ class PersonPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Person  $person
+     * @param  \App\Models\Paper  $paper
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Person $person)
+    public function forceDelete(User $user, Paper $paper)
     {
         //
     }

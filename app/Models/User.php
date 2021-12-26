@@ -6,6 +6,7 @@ use App\Models\Role;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -116,23 +117,12 @@ class User extends Authenticatable
         return $this->hasOne(Certificate::class);
     }
 
-
     /**
-     * Returns certificate only if user role is Graduated
-     *
-     * @throws Exception
+     * @return BelongsTo
      */
-    public function availableCertificate(): HasOne|string
+    public function group(): BelongsTo
     {
-        if ($this->role !== Role::GRADUATED) {
-            throw new Exception('only a graduate can have a certificate');
-        }
-
-        try {
-            return $this->certificate();
-        } catch (Exception $exception) {
-            return $exception->getMessage();
-        }
+        return $this->belongsTo(Group::class);
     }
 
     /**

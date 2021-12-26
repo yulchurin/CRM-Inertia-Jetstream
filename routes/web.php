@@ -29,7 +29,6 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 })->name('dashboard');
 
 Route::middleware(['auth:sanctum', 'user.active'])->get('/person', function () {
-
     return Inertia::render('Profile/Person', [
         'person' => auth()->user()->person,
         'passport' => auth()->user()->paper,
@@ -38,3 +37,8 @@ Route::middleware(['auth:sanctum', 'user.active'])->get('/person', function () {
     ]);
 
 })->name('person');
+
+
+Route::get('/test', function () {
+    return \App\Services\SumToWords::spell(2990000);
+});

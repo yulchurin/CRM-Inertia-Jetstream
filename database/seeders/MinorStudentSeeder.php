@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Group;
 use App\Models\LegalRepresentative;
 use App\Models\Paper;
 use App\Models\Person;
@@ -22,19 +23,21 @@ class MinorStudentSeeder extends Seeder
     {
         $faker = Factory::create();
 
-        User::factory(5)
-            ->has(Person::factory(1)
-                ->sequence(fn () => [
-                    'date_of_birth' => $faker->dateTimeBetween('-17 years', '-16 years')
-                ])
-                ->has(Paper::factory(1)))
-            ->has(LegalRepresentative::factory(1)
+        Group::factory(1)->has(
+            User::factory(5)
+                ->sequence(fn () => ['role' => Role::STUDENT])
                 ->has(Person::factory(1)
                     ->sequence(fn () => [
-                        'date_of_birth' => $faker->dateTimeBetween('-60 years', '-34 years')
+                        'date_of_birth' => $faker->dateTimeBetween('-17 years', '-16 years')
                     ])
-                    ->has(Paper::factory()->count(1)))
-            )
-            ->create(['role' => Role::STUDENT]);
+                    ->has(Paper::factory(1)))
+                ->has(LegalRepresentative::factory(1)
+                    ->has(Person::factory(1)
+                        ->sequence(fn () => [
+                            'date_of_birth' => $faker->dateTimeBetween('-60 years', '-34 years')
+                        ])
+                        ->has(Paper::factory()->count(1)))
+                )
+        )->create();
     }
 }

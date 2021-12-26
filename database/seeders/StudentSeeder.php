@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Group;
 use App\Models\Paper;
 use App\Models\Person;
 use App\Models\Role;
@@ -20,12 +21,14 @@ class StudentSeeder extends Seeder
     {
         $faker = Factory::create();
 
-        User::factory(10)
-            ->has(Person::factory()->count(1)
-                ->sequence(
-                    fn () => ['date_of_birth' => $faker->dateTimeBetween('-60 years', '-19 years')]
-                )
-                ->has(Paper::factory()->count(1)))
-            ->create(['role' => Role::STUDENT]);
+        Group::factory(4)->has(
+            User::factory(10)
+                ->sequence(fn () => ['role' => Role::STUDENT])
+                ->has(Person::factory()->count(1)
+                    ->sequence(
+                        fn () => ['date_of_birth' => $faker->dateTimeBetween('-60 years', '-19 years')]
+                    )
+                    ->has(Paper::factory()->count(1)))
+        )->create();
     }
 }

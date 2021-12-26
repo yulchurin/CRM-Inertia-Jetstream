@@ -14,8 +14,8 @@ class PaperFactory extends Factory
     public function definition()
     {
         return [
-            'series' => $this->faker->randomNumber(4),
-            'number' => $this->faker->randomNumber(6),
+            'series' => $this->faker->numerify('####'),
+            'number' => $this->faker->numerify('######'),
             'issuer' => $this->faker->company(),
             'issuance_date' => $this->faker->date(),
             'place_of_birth' => $this->faker->country(),
