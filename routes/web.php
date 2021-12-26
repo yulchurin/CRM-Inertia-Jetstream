@@ -42,6 +42,9 @@ Route::middleware(['auth:sanctum', 'user.active'])->get('/person', function () {
 
 
 Route::get('/test', function () {
-    $group = \App\Models\Group::find(1);
-    return \App\Services\SumToWords::spell(20005);
+//    $group = \App\Models\Group::find(1);
+//    return \App\Services\SumToWords::spell(20005);
+
+    $apo=App\Models\Appointment::with(['instructor', 'student'])->find(7)->toArray();
+    dd($apo);
 });
