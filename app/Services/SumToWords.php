@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Transformers\MoneyTransformer;
+use Illuminate\Support\Facades\Lang;
 use NumberFormatter;
 
 class SumToWords
@@ -17,24 +18,11 @@ class SumToWords
         $value = explode('.', number_format($value, 2, '.', ''));
 
         $f = new NumberFormatter('ru', NumberFormatter::SPELLOUT);
-        $str = $f->format($value[0]);
+        $strRub = $f->format($value[0]);
 
-        // Первую букву в верхний регистр.
-        $str = mb_strtoupper(mb_substr($str, 0, 1)) . mb_substr($str, 1, mb_strlen($str));
+        $rub = Lang::choice('рубль|рубля|рублей', $value[0], [], 'ru');
+        $kop = Lang::choice('копейка|копейки|копеек', $value[1], [], 'ru');
 
-        // Склонение слова "рубль".
-        $num = $value[0] % 100;
-        if ($num > 19) {
-            $num = $num % 10;
-        }
-        switch ($num) {
-            case 1: $rub = 'рубль'; break;
-            case 2:
-            case 3:
-            case 4: $rub = 'рубля'; break;
-            default: $rub = 'рублей';
-        }
-
-        return $str . ' ' . $rub . ' ' . $value[1] . ' коп.';
+        return $strRub .' '. $rub .' '. $value[1] .' '. $kop;
     }
 }

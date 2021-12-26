@@ -40,5 +40,5 @@ Route::middleware(['auth:sanctum', 'user.active'])->get('/person', function () {
 
 
 Route::get('/test', function () {
-    return \App\Services\SumToWords::spell(2990000);
+    return \App\Services\SumToWords::spell(2990002);
 });
