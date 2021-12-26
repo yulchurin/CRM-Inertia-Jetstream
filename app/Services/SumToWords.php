@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Transformers\MoneyTransformer;
@@ -14,15 +16,17 @@ class SumToWords
      */
     public static function spell(int $sum): string
     {
-        $value = MoneyTransformer::split($sum);
-        $value = explode('.', number_format($value, 2, '.', ''));
+        $rubles = MoneyTransformer::getRubles($sum);
+        $kopeck = MoneyTransformer::getKopecks($sum);
 
-        $f = new NumberFormatter('ru', NumberFormatter::SPELLOUT);
-        $strRub = $f->format($value[0]);
+        $formatter = new NumberFormatter('ru', NumberFormatter::SPELLOUT);
+        $strRub = $formatter->format($rubles);
 
-        $rub = Lang::choice('рубль|рубля|рублей', $value[0], [], 'ru');
-        $kop = Lang::choice('копейка|копейки|копеек', $value[1], [], 'ru');
+        $rub = Lang::choice('рубль|рубля|рублей', $rubles, [], 'ru');
+        $kop = Lang::choice('копейка|копейки|копеек', $kopeck, [], 'ru');
 
-        return $strRub .' '. $rub .' '. $value[1] .' '. $kop;
+        $kopeck = $kopeck > 9 ? $kopeck : "0$kopeck";
+
+        return "$strRub $rub $kopeck $kop";
     }
 }

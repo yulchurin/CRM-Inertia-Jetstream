@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -41,5 +43,5 @@ Route::middleware(['auth:sanctum', 'user.active'])->get('/person', function () {
 
 Route::get('/test', function () {
     $group = \App\Models\Group::find(1);
-    return \App\Services\SumToWords::spell($group->full_price);
+    return \App\Services\SumToWords::spell(20005);
 });

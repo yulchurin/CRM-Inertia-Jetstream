@@ -56,6 +56,14 @@ class Group extends Model
     }
 
     /**
+     * @return HasMany
+     */
+    public function appointments(): HasMany
+    {
+        return $this->hasMany(Appointment::class);
+    }
+
+    /**
      * Get full price
      *
      * @return int
