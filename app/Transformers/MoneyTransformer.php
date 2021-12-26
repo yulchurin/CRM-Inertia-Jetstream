@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Transformers;
 
 use JetBrains\PhpStorm\Pure;
@@ -14,30 +16,30 @@ class MoneyTransformer
 
     public function __construct(public int $value)
     {
-        $this->rubles = (int) substr($this->value, 0, -2);
-        $this->kopecks = (int) substr($this->value, -2);
+        $this->rubles = (int) substr((string) $this->value, 0, -2);
+        $this->kopecks = (int) substr((string) $this->value, -2);
     }
 
     public static function split(int $value)
     {
-        return substr($value, 0, -2) .'.'. substr($value, -2);
+        return substr((string) $value, 0, -2) .'.'. substr((string) $value, -2);
     }
 
-    public function getRubles(): int
+    public static function getRubles(int $value): int
     {
-        return $this->rubles;
+        return (int) substr((string) $value, 0, -2);
     }
 
-    public function getKopecks(): int
+    public static function getKopecks(int $value): int
     {
-        return $this->kopecks;
+        return (int) substr((string) $value, -2);
     }
 
     #[Pure]
     public function getTotalStringWithSymbol(): string
     {
         $number = self::split($this->value);
-        $formatted = number_format($number, 2, ',', ' ');
+        $formatted = number_format((float) $number, 2, ',', ' ');
         return $formatted . ' ₽';
     }
 }

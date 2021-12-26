@@ -44,6 +44,7 @@ class PaperPolicy
         return ! $user->paper()->exists();
         //todo: if underage
         // can create one more passport that will ve created when Legal Representative was created
+        // LOG!
     }
 
     /**
@@ -57,6 +58,7 @@ class PaperPolicy
     {
         return $user->person()->id === $paper->person_id
             || $user->legalRepresentativePerson()->id === $paper->person_id;
+        //TODO: LOG!
     }
 
     /**
