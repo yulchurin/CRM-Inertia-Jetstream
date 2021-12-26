@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property integer base_price NOTE: IN INTEGER
  * @property integer drive_hours NOTE: 56 by default
  * @property integer price_per_driving_hour NOTE: IN INTEGER
+ * @property int full_price NOTE: Accessor
  * @property Carbon created_at
  * @property Carbon updated_at
  * @property Carbon deleted_at
@@ -52,5 +53,15 @@ class Group extends Model
     public function user(): HasMany
     {
         return $this->hasMany(User::class);
+    }
+
+    /**
+     * Get full price
+     *
+     * @return int
+     */
+    public function getFullPriceAttribute(): int
+    {
+        return $this->price_per_driving_hour * $this->drive_hours + $this->base_price;
     }
 }

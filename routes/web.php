@@ -40,5 +40,6 @@ Route::middleware(['auth:sanctum', 'user.active'])->get('/person', function () {
 
 
 Route::get('/test', function () {
-    return \App\Services\SumToWords::spell(2990002);
+    $group = \App\Models\Group::find(1);
+    return \App\Services\SumToWords::spell($group->full_price);
 });
