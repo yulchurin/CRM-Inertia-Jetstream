@@ -27,3 +27,18 @@ Route::get('/', function () {
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->name('dashboard');
+
+Route::middleware(['auth:sanctum', 'user.active'])->get('/person', function () {
+    return Inertia::render('Profile/Person', [
+        'person' => auth()->user()->person,
+        'passport' => auth()->user()->paper,
+        'parent' => auth()->user()->legalRepresentativePerson,
+        'parent_pass' => auth()->user()->legalRepresentativePerson->paper,
+    ]);
+
+})->name('person');
+
+
+Route::get('/test', function () {
+    return \App\Services\SumToWords::spell(2990002);
+});
