@@ -15,36 +15,30 @@ class EmployeesSeeder extends Seeder
      */
     public function run()
     {
+        $owner = Role::where('name', 'owner')->first();
+        $admin = Role::where('name', 'admin')->first();
+        $teacher = Role::where('name', 'teacher')->first();
+        $instructor = Role::where('name', 'teacher')->first();
+
         User::factory(1)
             ->create([
                 'email' => 'admin@this.test',
-                'role' => Role::ADMIN,
                 'active' => true,
             ]);
 
         User::factory(1)
             ->create([
                 'email' => 'assistant@this.test',
-                'role' => Role::ASSISTANT,
-                'active' => true,
-            ]);
-
-        User::factory(1)
-            ->create([
-                'email' => 'manager@this.test',
-                'role' => Role::MANAGER,
                 'active' => true,
             ]);
 
         User::factory(2)
             ->create([
-                'role' => Role::TEACHER,
                 'active' => true,
             ]);
 
         User::factory(5)
             ->create([
-                'role' => Role::INSTRUCTOR,
                 'active' => true,
             ]);
     }

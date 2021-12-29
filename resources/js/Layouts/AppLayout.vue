@@ -20,7 +20,19 @@
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <jet-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Dashboard
+                                    Главная
+                                </jet-nav-link>
+                            </div>
+
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <jet-nav-link :href="route('appointments')" :active="route().current('appointments')">
+                                    Вождение
+                                </jet-nav-link>
+                            </div>
+
+                            <div v-if="$page.props.admin" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <jet-nav-link :href="route('folks.index')" :active="route().current('folks.index')">
+                                    Пользователи
                                 </jet-nav-link>
                             </div>
                         </div>
@@ -236,16 +248,21 @@
 </template>
 
 <script>
-    import { defineComponent } from 'vue'
+import {computed, defineComponent} from 'vue'
     import JetApplicationMark from '@/Jetstream/ApplicationMark.vue'
     import JetBanner from '@/Jetstream/Banner.vue'
     import JetDropdown from '@/Jetstream/Dropdown.vue'
     import JetDropdownLink from '@/Jetstream/DropdownLink.vue'
     import JetNavLink from '@/Jetstream/NavLink.vue'
     import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink.vue'
-    import { Head, Link } from '@inertiajs/inertia-vue3';
+    import {Head, Link, usePage} from '@inertiajs/inertia-vue3';
 
     export default defineComponent({
+        setup() {
+            const auth = computed(() => usePage().props.value.auth)
+            return { auth }
+        },
+
         props: {
             title: String,
         },

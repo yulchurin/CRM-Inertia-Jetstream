@@ -6,7 +6,6 @@ use App\Models\Certificate;
 use App\Models\Group;
 use App\Models\Paper;
 use App\Models\Person;
-use App\Models\Role;
 use App\Models\User;
 use Carbon\Carbon;
 use Faker\Factory;
@@ -37,7 +36,6 @@ class GraduatedSeeder extends Seeder
             ->has(Person::factory()->count(1)->has(Paper::factory()->count(1)))
             ->has(Certificate::factory()->count(1))
             ->create([
-                'role' => Role::GRADUATED,
                 'group_id' => $id,
             ]);
     }

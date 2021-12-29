@@ -9,8 +9,13 @@
         <div>
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                 <div>
-                    {{ person.first_name }}
+                    student: {{ person.first_name }} {{ person.last_name }}
+
                     {{ passport.series }} {{ passport.number }}
+                    <br><hr>
+                    parent: {{ parent.first_name }} {{ parent.last_name }}
+
+                    {{ parent_pass.series }} {{ parent_pass.number }}
                     <jet-section-border />
                 </div>
             </div>
@@ -32,6 +37,8 @@ export default defineComponent({
     props: {
         person: Object,
         passport: Object,
+        parent: Object,
+        parent_pass: Object,
     },
 
     components: {

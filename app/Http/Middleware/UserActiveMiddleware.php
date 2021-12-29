@@ -2,12 +2,13 @@
 
 namespace App\Http\Middleware;
 
+use App\Providers\RouteServiceProvider;
 use Closure;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class UserStatusMiddleware
+class UserActiveMiddleware
 {
     /**
      * Handle an incoming request.
@@ -18,7 +19,7 @@ class UserStatusMiddleware
     public function handle(Request $request, Closure $next)
     {
         if(! auth()->user()->active) {
-            abort(401);
+            return redirect(RouteServiceProvider::INACTIVE);
         }
 
         return $next($request);

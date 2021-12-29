@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Role;
-use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,9 +14,11 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use Laratrust\Traits\LaratrustUserTrait;
 
 class User extends Authenticatable
 {
+    use LaratrustUserTrait;
     use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto;
@@ -35,6 +35,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'profile_photo_path',
+        'vk_id',
+        'google_id',
     ];
 
     /**
@@ -56,6 +59,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'active' => 'boolean',
     ];
 
     /**
@@ -65,6 +69,8 @@ class User extends Authenticatable
      */
     protected $appends = [
         'profile_photo_url',
+        'permissions',
+        'person'
     ];
 
     /**
@@ -143,7 +149,8 @@ class User extends Authenticatable
      */
     public function isAdmin(): bool
     {
-        return Auth::user()->role === Role::ADMIN;
+        return false;
+        //
     }
 
     /**
@@ -153,6 +160,30 @@ class User extends Authenticatable
      */
     public function isAssistant(): bool
     {
-        return Auth::user()->role === Role::ASSISTANT;
+        return false;
+        //
+    }
+
+    /**
+     * Permissions Scope
+     *
+     * @return array
+     */
+    public function getPermissionsAttribute(): array
+    {
+        return [
+            'users' => [
+                'index' => $this->can('viewAny', User::class),
+                'view' => $this->can('view', [$this, User::class]),
+                'create' => $this->can('create', User::class),
+                'update' => $this->can('update', [$this, User::class]),
+                'delete' => $this->can('delete', [$this, User::class]),
+            ],
+        ];
+    }
+
+    public function getPersonAttribute()
+    {
+        //
     }
 }
