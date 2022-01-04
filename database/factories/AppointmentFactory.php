@@ -20,7 +20,7 @@ class AppointmentFactory extends Factory
             'vehicle_id' => $this->faker->randomDigitNotNull,
             'driving_schedule_id' => $this->faker->numberBetween(1, 10),
             'place_id' => $this->faker->numberBetween(1, 9),
-            'student' => $this->faker->numberBetween(11, 50),
+            'student_id' => $this->faker->numberBetween(20, 60),
             'instructor' => $this->faker->numberBetween(6, 10),
             'comment' => $this->faker->sentence(),
         ];

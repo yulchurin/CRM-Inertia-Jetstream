@@ -19,7 +19,6 @@
         "laravel/tinker": "^2.5",
         "pelmered/fake-car": "^1.7",
         "pusher/pusher-php-server": "^7.0",
-        "santigarcor/laratrust": "^6.3",
         "socialiteproviders/vkontakte": "^4.2",
         "tightenco/ziggy": "^1.0"
     },

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
-use App\Models\Role;
+use App\Models\Student;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
@@ -19,20 +19,16 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Inertia\Response
-     * @throws AuthorizationException
      */
     public function index()
     {
-        $users = User::with(['person', 'paper', 'legalRepresentativePerson'])->paginate(10);
+        $users = Student::with(['person', 'paper', 'legalRepresentativePerson'])->paginate(10);
 
         $users = (new UserCollection($users))->resource;
 
-        return $users;
-
-//        return inertia('Users/Index', [
-//            'users' => $users,
-//        ]);
+        return inertia('Users/Index', [
+            'users' => $users,
+        ]);
     }
 
     /**

@@ -27,7 +27,7 @@ import { usePage } from '@inertiajs/inertia-vue3'
 
 export default defineComponent({
     setup() {
-        const auth = computed(() => usePage().props.value.auth)
+        const auth = computed(() => usePage().props.value.auth.user)
         return { auth }
     },
     props: {

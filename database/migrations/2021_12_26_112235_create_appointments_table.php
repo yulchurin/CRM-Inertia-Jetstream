@@ -21,14 +21,14 @@ class CreateAppointmentsTable extends Migration
             $table->foreignId('driving_schedule_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('place_id')->nullable()->constrained();
 
-            $table->unsignedBigInteger('student')->nullable();
+            $table->unsignedBigInteger('student_id')->nullable();
             $table->unsignedBigInteger('instructor');
 
             $table->string('comment')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('student')->references('id')->on('users');
+            $table->foreign('student_id')->references('id')->on('users');
             $table->foreign('instructor')->references('id')->on('users');
         });
     }

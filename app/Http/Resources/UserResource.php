@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Role;
+use App\Models\Student;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -20,12 +21,11 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'active' => $this->active === true,
-            // person
             'person' => $this?->person,
             'paper' => $this?->paper,
-            // legal representative with paper (passport)
             'parent' => $this?->legalRepresentativePerson,
-            'permissions' => $this->permissions
+            'permissions' => $this->permissions,
+            'isMinor' => Student::find($this->id)->isMinor(),
         ];
     }
 }

@@ -28,17 +28,23 @@
                     </div>
                     <div class="relative my-6">
                         <div class="relative flex justify-center text-sm border-t border-gray-300">
-                                <span class="flex items-center justify-center font-mono">
+                                <div class="font-mono">
                                     Пожалуйста, дождитесь активации!<br><br>
                                     Не нужно регистрировать новую учётную запись
                                     или входить с другого сервиса.<br><br>
-                                    Если Вы вошли используя Google - продолжайте использовать Google<br><br>
-                                    Если Вы вошли используя VK - продолжайте использовать VK<br><br>
-                                    Если Вы зарегистрировали аккаунт в нашем сервисе -
+                                    <strong v-if="google">
+                                        Вы вошли используя Google - продолжайте использовать Google<br><br>
+                                    </strong>
+                                    <strong v-if="vk">
+                                        Вы вошли используя VK - продолжайте использовать VK<br><br>
+                                    </strong>
+                                    <strong v-if="!google && !vk">
+                                        Вы зарегистрировали аккаунт в нашем сервисе -
                                         не используйте для входа социальные сети.<br><br>
+                                    </strong>
                                     Если учётная запись не активна в течение 48 часов после регистрации -
                                     обратитесь к администартору системы<br><br>
-                                </span>
+                                </div>
                         </div>
                     </div>
                 </div>
@@ -124,6 +130,8 @@
         props: {
             auth: Boolean,
             user: String,
+            google: Boolean,
+            vk: Boolean
         }
     })
 </script>

@@ -12,26 +12,32 @@
                         <div class="flex">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
-                                <Link :href="route('dashboard')">
+                                <Link :href="route('home')">
                                     <jet-application-mark class="block h-9 w-auto" />
                                 </Link>
                             </div>
 
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <jet-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
+                                <jet-nav-link :href="route('home')" :active="route().current('home')">
                                     Главная
                                 </jet-nav-link>
                             </div>
 
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <jet-nav-link :href="route('appointments')" :active="route().current('appointments')">
+                                <jet-nav-link :href="route('appointments.index')" :active="route().current('appointments.index')">
                                     Вождение
                                 </jet-nav-link>
                             </div>
 
-                            <div v-if="$page.props.admin" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <jet-nav-link :href="route('folks.index')" :active="route().current('folks.index')">
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <jet-nav-link :href="route('appointments.index')" :active="route().current('appointments.index')">
+                                    Уроки
+                                </jet-nav-link>
+                            </div>
+
+                            <div v-if="$page.props.userIsAdmin" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <jet-nav-link :href="route('users.index')" :active="route().current('users.index')">
                                     Пользователи
                                 </jet-nav-link>
                             </div>
@@ -122,9 +128,11 @@
                                             Profile
                                         </jet-dropdown-link>
 
-                                        <jet-dropdown-link href="/person">
-                                            Person
-                                        </jet-dropdown-link>
+                                        <div v-if="$page.props.personable">
+                                            <jet-dropdown-link :href="route('person.index')">
+                                                Person
+                                            </jet-dropdown-link>
+                                        </div>
 
                                         <jet-dropdown-link :href="route('api-tokens.index')" v-if="$page.props.jetstream.hasApiFeatures">
                                             API Tokens
@@ -158,9 +166,18 @@
                 <!-- Responsive Navigation Menu -->
                 <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}" class="sm:hidden">
                     <div class="pt-2 pb-3 space-y-1">
-                        <jet-responsive-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
-                            Dashboard
+                        <jet-responsive-nav-link :href="route('home')" :active="route().current('home')">
+                            Главная
                         </jet-responsive-nav-link>
+
+                        <jet-responsive-nav-link :href="route('users.index')" :active="route().current('users.index')">
+                            Пользователи
+                        </jet-responsive-nav-link>
+
+                        <jet-responsive-nav-link :href="route('appointments.index')" :active="route().current('appointments.index')">
+                            Вождение
+                        </jet-responsive-nav-link>
+
                     </div>
 
                     <!-- Responsive Settings Options -->
@@ -259,7 +276,7 @@ import {computed, defineComponent} from 'vue'
 
     export default defineComponent({
         setup() {
-            const auth = computed(() => usePage().props.value.auth)
+            const auth = computed(() => usePage().props.value.auth.user)
             return { auth }
         },
 

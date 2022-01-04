@@ -17,12 +17,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string middle_name
  * @property mixed date_of_birth
  * @property string phone
- * @property string address_zip
- * @property string address_region
- * @property string address_city
- * @property string address_street
- * @property string address_house
- * @property string address_flat
+ * @property string zip
+ * @property string region
+ * @property string city
+ * @property string street
+ * @property string house
+ * @property string flat
  * @property Carbon created_at
  * @property Carbon updated_at
  * @property Carbon deleted_at
@@ -53,12 +53,10 @@ class Person extends Model
     ];
 
     /**
-     * The attributes that should be cast.
-     *
      * @var array
      */
-    protected $casts = [
-        'date_of_birth' => 'date',
+    protected $dates = [
+        'date_of_birth',
     ];
 
     /**
@@ -89,5 +87,13 @@ class Person extends Model
     public function paper(): HasOne
     {
         return $this->hasOne(Paper::class);
+    }
+
+    /**
+     * @return Carbon
+     */
+    public function getDateOfBirth(): Carbon
+    {
+        return $this->date_of_birth;
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePersonsTable extends Migration
+class CreatePeopleTable extends Migration
 {
     /**
      * Run the migrations.
@@ -33,7 +33,7 @@ class CreatePersonsTable extends Migration
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->date('date_of_birth');
-            $table->string('phone', 16)->unique();
+            $table->string('phone', 18)->unique();
 
             $table->string('zip', 50)->nullable();
             $table->string('region', 255)->nullable();

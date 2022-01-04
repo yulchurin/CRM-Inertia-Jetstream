@@ -1,4 +1,6 @@
 const mix = require('laravel-mix');
+const domain = 'crm.test';
+const homedir = require('os').homedir();
 
 /*
  |--------------------------------------------------------------------------
@@ -22,6 +24,13 @@ if (mix.inProduction()) {
     mix.version();
 }
 
+// The mix script:
 mix.browserSync({
-    proxy: "http://crm.test"
+    proxy: 'https://' + domain,
+    host: domain,
+    open: 'external',
+    https: {
+        key: homedir + '/.config/valet/Certificates/' + domain + '.key',
+        cert: homedir + '/.config/valet/Certificates/' + domain + '.crt',
+    },
 })

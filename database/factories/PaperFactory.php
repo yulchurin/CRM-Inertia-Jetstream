@@ -19,6 +19,7 @@ class PaperFactory extends Factory
             'issuer' => $this->faker->company(),
             'issuance_date' => $this->faker->date(),
             'place_of_birth' => $this->faker->country(),
+            'snils' => $this->faker->numerify('###########')
         ];
     }
 }

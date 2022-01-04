@@ -2,36 +2,32 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\PaperController;
+use App\Http\Controllers\PersonController;
 use App\Http\Controllers\UserController;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 require __DIR__ . '/socialite.php';
-require __DIR__ . '/service.php';
+require __DIR__ . '/closures.php';
 
-Route::middleware(['auth:sanctum', 'verified', 'user.active'])->get('/', function () {
+Route::middleware(['auth:sanctum', 'user.inactive'])->group(function () {
+    Route::middleware('phoneFix')->group(function () {
+        Route::apiResource('/person', PersonController::class)->only(['store', 'index']);
 
-    Inertia::share('auth', function () {
-        return Auth::user();
+        Route::post('/parent', [PersonController::class, 'storeParent'])
+            ->name('parent.store');
+        Route::post('/parent/paper', [PaperController::class, 'storeParent'])
+            ->name('parent.paper.store');
+
+        Route::apiResource('/papers', PaperController::class)->only(['store']);
     });
 
-    Inertia::share('admin', function () {
-        return Auth::user()->isAdmin() || Auth::user()->isAssistant();
+    Route::apiResource('/appointments', AppointmentController::class);
+
+    Route::middleware(['management'])->group(function () {
+        Route::resource('/users', UserController::class);
     });
-
-    return Inertia::render('Dashboard');
-})->name('dashboard');
-
-Route::get('/appointments', function () {
-    echo 'aaaa';
-})->name('appointments');
-
-Route::middleware(['auth:sanctum'])->group(function () {
-    //Route::middleware(['management'])->group(function () {
-        //Route::resource('/users', UserController::class);
-    //});
 });
 
-Route::resource('/users', UserController::class);
+Route::get('/test', [UserController::class, 'index']);

@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use App\Models\Role;
+use App\Models\Person;
 use App\Models\User;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
@@ -27,5 +27,11 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+
+        Gate::after(function ($user, $ability, $result, $arguments) {
+            if ($user->isOwner()) {
+                return true;
+            }
+        });
     }
 }

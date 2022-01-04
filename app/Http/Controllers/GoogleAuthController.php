@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Role;
+use App\Interfaces\UserRole;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -27,38 +27,38 @@ class GoogleAuthController extends Controller
     /**
      * Gets callback from Google then makes a decision whether to authenticate user
      */
-    public function callback()
+    public function callback(): \Illuminate\Http\RedirectResponse
     {
         try {
             $googleUser = Socialite::driver('google')->user();
-
             $user = User::where('email', $googleUser->email)->first();
 
             if ($user) {
                 Auth::login($user);
             } else {
                 $newUser = User::create([
-                    'name' => $googleUser->name,
-                    'email' => $googleUser->email,
-                    'google_id' => $googleUser->id,
+                    'name' => $googleUser->getName(),
+                    'email' => $googleUser->getEmail(),
+                    'google_id' => $googleUser->getId(),
                     'password' => Hash::make(Str::random(10)),
-                    'profile_photo_path' => $googleUser->avatar,
+                    'profile_photo_path' => $googleUser->getAvatar(),
+                    'role' => UserRole::ENROLLEE,
                 ]);
                 Auth::login($newUser);
             }
 
             if (!$user && !$newUser) {
-                $email = $googleUser->email;
+                $email = $googleUser->getEmail();
                 throw new Exception("$email login error", 500);
             }
 
         } catch (Exception $e) {
             if ($e->getCode() !== 0) {
-                Log::channel('auth')->error($e->getMessage());
+                Log::channel('auth')->error($googleUser?->getId() .': '. $e->getMessage());
             }
         }
 
-        return redirect()->intended('dashboard');
+        return redirect()->intended('home');
     }
 }
 

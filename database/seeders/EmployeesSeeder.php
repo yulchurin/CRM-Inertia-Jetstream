@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
+use App\Interfaces\UserRole;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -15,29 +15,28 @@ class EmployeesSeeder extends Seeder
      */
     public function run()
     {
-        $owner = Role::where('name', 'owner')->first();
-        $admin = Role::where('name', 'admin')->first();
-        $teacher = Role::where('name', 'teacher')->first();
-        $instructor = Role::where('name', 'teacher')->first();
+        User::factory(1)
+            ->sequence(fn () => ['role' => UserRole::OWNER])
+            ->create([
+                'email' => 'owner@this.test',
+                'active' => true,
+            ]);
 
         User::factory(1)
+            ->sequence(fn () => ['role' => UserRole::ADMIN])
             ->create([
                 'email' => 'admin@this.test',
                 'active' => true,
             ]);
 
-        User::factory(1)
-            ->create([
-                'email' => 'assistant@this.test',
-                'active' => true,
-            ]);
-
         User::factory(2)
+            ->sequence(fn () => ['role' => UserRole::TEACHER])
             ->create([
                 'active' => true,
             ]);
 
         User::factory(5)
+            ->sequence(fn () => ['role' => UserRole::INSTRUCTOR])
             ->create([
                 'active' => true,
             ]);

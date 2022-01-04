@@ -119,6 +119,12 @@ return [
             'path' => storage_path('logs/auth.log'),
             'days' => 90,
         ],
+
+        'user_actions' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/user_actions.log'),
+            'days' => 365,
+        ],
     ],
 
 ];

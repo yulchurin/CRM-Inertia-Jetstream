@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Role;
+use App\Interfaces\UserRole;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class VkAuthController extends Controller
 {
     /**
-     * Redirects to Google OAuth when user is not authenticated
+     * Redirects to VK OAuth when user is not authenticated
      *
      * @return RedirectResponse
      */
@@ -25,41 +25,44 @@ class VkAuthController extends Controller
     }
 
     /**
-     * Gets callback from Google then makes a decision whether to authenticate user
+     * Gets callback from VK then makes a decision whether to authenticate user
      */
-    public function callback()
+    public function callback(): \Illuminate\Http\RedirectResponse
     {
         try {
             $vkUser = Socialite::driver('vkontakte')->user();
-
-            $email = $vkUser->nickname ? $vkUser->nickname . '@vk.com' : $vkUser->id . '@vk.com';
 
             $user = User::where('vk_id', $vkUser->id)->first();
 
             if ($user) {
                 Auth::login($user);
             } else {
+                $dummyEmail = $vkUser->getNickname()
+                    ? $vkUser->getNickname() . '@vk.com'
+                    : $vkUser->getId() . '@vk.com';
+
                 $newUser = User::create([
-                    'name' => $vkUser->name,
-                    'email' => $email,
-                    'vk_id' => $vkUser->id,
+                    'name' => $vkUser->getName(),
+                    'email' => $vkUser->getEmail() ?? $dummyEmail,
+                    'vk_id' => $vkUser->getId(),
                     'password' => Hash::make(Str::random(10)),
-                    'profile_photo_path' => $vkUser->avatar,
+                    'profile_photo_path' => $vkUser->getAvatar(),
+                    'role' => UserRole::ENROLLEE,
                 ]);
                 Auth::login($newUser);
             }
 
             if (!$user && !$newUser) {
-                throw new Exception("$email login error", 500);
+                throw new Exception("$dummyEmail login error", 500);
             }
 
         } catch (Exception $e) {
             if ($e->getCode() !== 0) {
-                Log::channel('auth')->error($e->getMessage());
+                Log::channel('auth')->error($vkUser?->getId() .': '. $e->getMessage());
             }
         }
 
-        return redirect()->intended('dashboard');
+        return redirect()->intended('home');
     }
 }
 
