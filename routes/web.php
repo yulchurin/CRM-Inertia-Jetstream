@@ -5,11 +5,11 @@ declare(strict_types=1);
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\PaperController;
 use App\Http\Controllers\PersonController;
-use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 require __DIR__ . '/socialite.php';
 require __DIR__ . '/closures.php';
+require __DIR__ . '/admin.php';
 
 Route::middleware(['auth:sanctum', 'user.inactive'])->group(function () {
     Route::middleware('phoneFix')->group(function () {
@@ -24,10 +24,4 @@ Route::middleware(['auth:sanctum', 'user.inactive'])->group(function () {
     });
 
     Route::apiResource('/appointments', AppointmentController::class);
-
-    Route::middleware(['management'])->group(function () {
-        Route::resource('/users', UserController::class);
-    });
 });
-
-Route::get('/test', [UserController::class, 'index']);

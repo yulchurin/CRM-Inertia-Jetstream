@@ -11,13 +11,27 @@
         <template #form>
             <div class="col-span-6 sm:col-span-6 lg:col-span-2">
                 <jet-label for="series" value="Серия" />
-                <jet-input id="series" type="text" class="mt-1 block w-full" v-model="form.series" autocomplete="series" />
+                <input
+                    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
+                    v-maska="'####'"
+                    v-model="form.series"
+                    id="series"
+                    type="text"
+                    autocomplete="series"
+                />
                 <jet-input-error :message="form.errors.series" class="mt-2" />
             </div>
 
             <div class="col-span-6 sm:col-span-6 lg:col-span-2">
                 <jet-label for="number" value="Номер" />
-                <jet-input id="number" type="text" class="mt-1 block w-full" v-model="form.number" autocomplete="number" />
+                <input
+                    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
+                    v-maska="'######'"
+                    v-model="form.number"
+                    id="number"
+                    type="text"
+                    autocomplete="number"
+                />
                 <jet-input-error :message="form.errors.number" class="mt-2" />
             </div>
 

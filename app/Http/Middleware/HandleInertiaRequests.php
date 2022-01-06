@@ -49,9 +49,10 @@ class HandleInertiaRequests extends Middleware
 
             'role' => Auth::user()?->getRoleName(),
             'socialite' => Auth::user()?->isSocialiteUser(),
-            'personable' => Auth::user()?->mayHavePerson(),
+            'userIsStudent' => Auth::user()?->mayHavePerson(),
             'userIsMinor' => Student::find(Auth::id())?->isMinor(),
             'userIsAdmin' => Auth::user()?->isAdmin() || Auth::user()?->isOwner(),
+            'userIsInstructor' => Auth::user()?->isInstructor(),
         ]);
     }
 }

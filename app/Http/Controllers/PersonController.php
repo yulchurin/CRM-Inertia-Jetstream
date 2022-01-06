@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ParentPersonRequest;
 use App\Http\Requests\PersonRequest;
 use App\Http\Resources\PaperResource;
 use App\Http\Resources\PersonResource;
@@ -56,7 +57,7 @@ class PersonController extends Controller
             ? new PersonResource($student->legalRepresentativePerson)
             : null;
 
-        $parentPaper = $student->legalRepresentativePerson->paper()->exists()
+        $parentPaper = $student->legalRepresentativePerson?->paper()->exists()
             ? new PaperResource($student->legalRepresentativePerson?->paper)
             : null;
 
@@ -68,8 +69,23 @@ class PersonController extends Controller
         ]);
     }
 
-    public function storeParent()
+    public function storeParent(ParentPersonRequest $request)
     {
+        $student = $this->getStudent();
 
+        if ($student?->legalRepresentativePerson()->exists()) {
+            $student->legalRepresentativePerson()->update($request->validated());
+        } else {
+            $legalRepresentative = $student->legalRepresentative()->create();
+            $legalRepresentativePerson = $student->legalRepresentativePerson()->create($request->validated());
+            $legalRepresentativePerson->legal_representative_id = $legalRepresentative->id;
+            $legalRepresentativePerson->save();
+        }
+
+        Log::channel('user_actions')->info(Auth::id() . ': ' .json_encode($request->validated()));
+
+        return $request->wantsJson()
+            ? new JsonResponse('', 200)
+            : back()->with('status', 'profile-information-updated');
     }
 }

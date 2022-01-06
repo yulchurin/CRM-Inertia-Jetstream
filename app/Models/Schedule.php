@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @property mixed start
- * @property int duration
+ * @property mixed start // MySQL TIME ('H:i')
+ * @property int duration // lesson duration in seconds
  */
-class DrivingSchedule extends Model
+class Schedule extends Model
 {
     use HasFactory;
     use SoftDeletes;
@@ -20,6 +20,8 @@ class DrivingSchedule extends Model
         'start',
         'duration',
     ];
+
+    protected $dates = ['start'];
 
     /**
      * @return HasMany

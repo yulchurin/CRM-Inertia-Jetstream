@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
@@ -22,7 +23,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = Student::with(['person', 'paper', 'legalRepresentativePerson'])->paginate(10);
+        $users = User::paginate(10);
 
         $users = (new UserCollection($users))->resource;
 

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDrivingSchedulesTable extends Migration
+class CreateSchedulesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateDrivingSchedulesTable extends Migration
      */
     public function up()
     {
-        Schema::create('driving_schedules', function (Blueprint $table) {
+        Schema::create('schedules', function (Blueprint $table) {
             $table->id();
             $table->time('start');
             $table->unsignedSmallInteger('duration'); // max 65535 seconds, approx. 18 hrs.
@@ -29,6 +29,6 @@ class CreateDrivingSchedulesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('driving_schedules');
+        Schema::dropIfExists('schedules');
     }
 }

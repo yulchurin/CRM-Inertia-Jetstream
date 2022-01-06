@@ -11,6 +11,14 @@ use NumberFormatter;
 class SumToWords
 {
     /**
+     * Converts Sum in kopecks to words
+     *
+     * (e.g. 5000 rub 70 kop is 500070
+     * due PHP has not Decimal Type,
+     * and we don't want to have problems with floats)
+     *
+     * (int) 500070 => (string) "пять тысяч рублей 70 копеек"
+     *
      * @param int $sum
      * @return string
      */

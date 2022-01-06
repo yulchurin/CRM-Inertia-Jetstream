@@ -85,7 +85,14 @@
 
             <div class="col-span-6 sm:col-span-6 lg:col-span-2">
                 <jet-label for="zip" value="Индекс" />
-                <jet-input id="zip" type="text" class="mt-1 block w-full" v-model="form.zip" autocomplete="zip" />
+                <input
+                    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
+                    v-maska="'######'"
+                    v-model="form.zip"
+                    id="zip"
+                    type="text"
+                    autocomplete="zip"
+                />
                 <jet-input-error :message="form.errors.zip" class="mt-2" />
             </div>
 

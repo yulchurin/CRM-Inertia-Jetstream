@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Paper;
+use App\Models\Student;
+use App\Rules\snilsValidation;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ParentPaperRequest extends FormRequest
 {
@@ -13,7 +17,10 @@ class ParentPaperRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        $paper = Paper::find($this->id);
+
+        return $this->user()->can('update', $paper) ||
+            $this->user()->can('create', Paper::class);
     }
 
     /**
@@ -24,7 +31,10 @@ class ParentPaperRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'series' => 'required|digits:4',
+            'number' => 'required|digits:6',
+            'issuer' => 'required|string',
+            'issuance_date' => 'required|date',
         ];
     }
 }

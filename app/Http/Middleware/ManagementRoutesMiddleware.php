@@ -2,9 +2,11 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Role;
 use Closure;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class ManagementRoutesMiddleware
 {
@@ -13,11 +15,11 @@ class ManagementRoutesMiddleware
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+     * @return Response|RedirectResponse
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): Response|RedirectResponse
     {
-        if (true) { //todo
+        if (Auth::user()->isOwner() || Auth::user()->isAdmin()) {
             return $next($request);
         }
 

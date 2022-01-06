@@ -4,6 +4,9 @@ namespace App\Providers;
 
 use App\Http\Resources\PaperResource;
 use App\Http\Resources\PersonResource;
+use App\Http\Resources\ScheduleCollection;
+use App\Http\Resources\ScheduleResource;
+use App\Http\Resources\UserCollection;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
@@ -29,6 +32,9 @@ class AppServiceProvider extends ServiceProvider
     {
         PersonResource::withoutWrapping();
         PaperResource::withoutWrapping();
+        UserCollection::withoutWrapping();
+        ScheduleResource::withoutWrapping();
+        ScheduleCollection::withoutWrapping();
 
         Inertia::share([
             'errors' => function () {

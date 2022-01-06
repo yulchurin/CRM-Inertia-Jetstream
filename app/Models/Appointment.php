@@ -38,6 +38,8 @@ class Appointment extends Model
         'comment',
     ];
 
+    protected $dates = ['date'];
+
     /**
      * Appointment belongs to Driving Schedule
      *
@@ -45,7 +47,7 @@ class Appointment extends Model
      */
     public function drivingSchedule(): BelongsTo
     {
-        return $this->belongsTo(DrivingSchedule::class);
+        return $this->belongsTo(Schedule::class);
     }
 
     /**

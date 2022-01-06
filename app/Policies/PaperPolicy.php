@@ -43,7 +43,8 @@ class PaperPolicy
     public function create(User $user)
     {
         $student = Student::find($user->id);
-        return ! $student->paper()->exists();
+        return (! $student->paper()->exists()) ||
+            (! $student->legalRepresentativePerson->paper()->exists());
     }
 
     /**
@@ -56,7 +57,10 @@ class PaperPolicy
     public function update(User $user, Paper $paper)
     {
         $student = Student::find($user->id);
-        return $student->person?->id === $paper->person_id || $user->isAdmin();
+
+        return $student->person?->id === $paper->person_id ||
+            $paper->person_id === $student?->legalRepresentativePerson?->id ||
+            $user->isAdmin();
     }
 
     /**

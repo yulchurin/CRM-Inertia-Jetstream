@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PaperRequest;
+use App\Http\Requests\ParentPaperRequest;
 use App\Traits\GetStudent;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -29,8 +30,22 @@ class PaperController extends Controller
             : back()->with('status', 'profile-information-updated');
     }
 
-    public function storeParent()
+    public function storeParent(ParentPaperRequest $request)
     {
+        $student = $this->getStudent();
 
+        $person = $student->legalRepresentative->person;
+
+        if (! $person->paper()->exists()) {
+            $person->paper()->create($request->validated());
+        } else {
+            $person->paper()->update($request->validated());
+        }
+
+        Log::channel('user_actions')->info(Auth::id() . ': ' .json_encode($request->validated()));
+
+        return $request->wantsJson()
+            ? new JsonResponse('', 200)
+            : back()->with('status', 'profile-information-updated');
     }
 }

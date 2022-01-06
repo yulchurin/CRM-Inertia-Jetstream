@@ -2,11 +2,9 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Role;
-use App\Models\Student;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class AppointmentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,12 +14,6 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'email' => $this->email,
-            'active' => $this->active === true,
-            'permissions' => $this->permissions,
-        ];
+        return parent::toArray($request);
     }
 }

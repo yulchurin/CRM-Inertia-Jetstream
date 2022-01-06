@@ -2,11 +2,10 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Role;
 use App\Models\Student;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class StudentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -21,7 +20,11 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'active' => $this->active === true,
+            'person' => $this?->person,
+            'paper' => $this?->paper,
+            'parent' => $this?->legalRepresentativePerson,
             'permissions' => $this->permissions,
+            'isMinor' => Student::find($this->id)->isMinor(),
         ];
     }
 }

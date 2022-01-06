@@ -43,7 +43,8 @@ class PersonPolicy
     public function create(User $user)
     {
         $student = Student::find($user->id);
-        return ! $student->person()->exists();
+        return (! $student->person()->exists()) ||
+            ($student->isMinor() && (! $student->legalRepresentativePerson()->exists()));
     }
 
     /**
@@ -55,7 +56,11 @@ class PersonPolicy
      */
     public function update(User $user, Person $person)
     {
-        return $user->id === $person->user_id || $user->isAdmin();
+        $student = Student::find($user->id);
+
+        return $user->id === $person?->user_id ||
+            $user->isAdmin() ||
+            $person->legal_representative_id === $student?->legalRepresentative?->id;
     }
 
     /**

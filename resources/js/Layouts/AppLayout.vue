@@ -17,30 +17,13 @@
                                 </Link>
                             </div>
 
-                            <!-- Navigation Links -->
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <jet-nav-link :href="route('home')" :active="route().current('home')">
-                                    Главная
-                                </jet-nav-link>
-                            </div>
+                            <template v-if="$page.props.userIsStudent">
+                                <student-nav />
+                            </template>
 
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <jet-nav-link :href="route('appointments.index')" :active="route().current('appointments.index')">
-                                    Вождение
-                                </jet-nav-link>
-                            </div>
-
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <jet-nav-link :href="route('appointments.index')" :active="route().current('appointments.index')">
-                                    Уроки
-                                </jet-nav-link>
-                            </div>
-
-                            <div v-if="$page.props.userIsAdmin" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <jet-nav-link :href="route('users.index')" :active="route().current('users.index')">
-                                    Пользователи
-                                </jet-nav-link>
-                            </div>
+                            <template v-if="$page.props.userIsAdmin">
+                                <admin-nav />
+                            </template>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
@@ -121,16 +104,16 @@
                                     <template #content>
                                         <!-- Account Management -->
                                         <div class="block px-4 py-2 text-xs text-gray-400">
-                                            Manage Account
+                                            Управление аккаунтом
                                         </div>
 
                                         <jet-dropdown-link :href="route('profile.show')">
-                                            Profile
+                                            Профиль
                                         </jet-dropdown-link>
 
-                                        <div v-if="$page.props.personable">
+                                        <div v-if="$page.props.userIsStudent">
                                             <jet-dropdown-link :href="route('person.index')">
-                                                Person
+                                                Персональные данные
                                             </jet-dropdown-link>
                                         </div>
 
@@ -143,10 +126,11 @@
                                         <!-- Authentication -->
                                         <form @submit.prevent="logout">
                                             <jet-dropdown-link as="button">
-                                                Log Out
+                                                Выход
                                             </jet-dropdown-link>
                                         </form>
                                     </template>
+
                                 </jet-dropdown>
                             </div>
                         </div>
@@ -166,18 +150,13 @@
                 <!-- Responsive Navigation Menu -->
                 <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}" class="sm:hidden">
                     <div class="pt-2 pb-3 space-y-1">
-                        <jet-responsive-nav-link :href="route('home')" :active="route().current('home')">
-                            Главная
-                        </jet-responsive-nav-link>
+                        <template v-if="$page.props.userIsStudent">
+                            <student-responsive-nav />
+                        </template>
 
-                        <jet-responsive-nav-link :href="route('users.index')" :active="route().current('users.index')">
-                            Пользователи
-                        </jet-responsive-nav-link>
-
-                        <jet-responsive-nav-link :href="route('appointments.index')" :active="route().current('appointments.index')">
-                            Вождение
-                        </jet-responsive-nav-link>
-
+                        <template v-if="$page.props.userIsAdmin">
+                            <admin-responsive-nav />
+                        </template>
                     </div>
 
                     <!-- Responsive Settings Options -->
@@ -195,8 +174,14 @@
 
                         <div class="mt-3 space-y-1">
                             <jet-responsive-nav-link :href="route('profile.show')" :active="route().current('profile.show')">
-                                Profile
+                                Профиль
                             </jet-responsive-nav-link>
+
+                            <div v-if="$page.props.userIsStudent">
+                                <jet-responsive-nav-link :href="route('person.index')" :active="route().current('person.index')">
+                                    Персональные данные
+                                </jet-responsive-nav-link>
+                            </div>
 
                             <jet-responsive-nav-link :href="route('api-tokens.index')" :active="route().current('api-tokens.index')" v-if="$page.props.jetstream.hasApiFeatures">
                                 API Tokens
@@ -205,7 +190,7 @@
                             <!-- Authentication -->
                             <form method="POST" @submit.prevent="logout">
                                 <jet-responsive-nav-link as="button">
-                                    Log Out
+                                    Выход
                                 </jet-responsive-nav-link>
                             </form>
 
@@ -265,15 +250,18 @@
 </template>
 
 <script>
-import {computed, defineComponent} from 'vue'
-    import JetApplicationMark from '@/Jetstream/ApplicationMark.vue'
-    import JetBanner from '@/Jetstream/Banner.vue'
-    import JetDropdown from '@/Jetstream/Dropdown.vue'
-    import JetDropdownLink from '@/Jetstream/DropdownLink.vue'
-    import JetNavLink from '@/Jetstream/NavLink.vue'
-    import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink.vue'
-    import {Head, Link, usePage} from '@inertiajs/inertia-vue3';
-
+import {computed, defineComponent} from 'vue';
+import JetApplicationMark from '@/Jetstream/ApplicationMark.vue';
+import JetBanner from '@/Jetstream/Banner.vue';
+import JetDropdown from '@/Jetstream/Dropdown.vue';
+import JetDropdownLink from '@/Jetstream/DropdownLink.vue';
+import JetNavLink from '@/Jetstream/NavLink.vue';
+import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink.vue';
+import {Head, Link, usePage} from '@inertiajs/inertia-vue3';
+import StudentNav from "@/Layouts/StudentNav";
+import AdminNav from "@/Layouts/AdminNav";
+import AdminResponsiveNav from "@/Layouts/AdminResponsiveNav";
+import StudentResponsiveNav from "@/Layouts/StudentResponsiveNav";
     export default defineComponent({
         setup() {
             const auth = computed(() => usePage().props.value.auth.user)
@@ -285,6 +273,7 @@ import {computed, defineComponent} from 'vue'
         },
 
         components: {
+            AdminNav,
             Head,
             JetApplicationMark,
             JetBanner,
@@ -293,6 +282,9 @@ import {computed, defineComponent} from 'vue'
             JetNavLink,
             JetResponsiveNavLink,
             Link,
+            StudentNav,
+            AdminResponsiveNav,
+            StudentResponsiveNav,
         },
 
         data() {

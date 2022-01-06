@@ -1,13 +1,47 @@
 <template>
+    <!-- Navigation Links -->
+    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+        <jet-nav-link :href="route('home')" :active="route().current('home')">
+            Главная
+        </jet-nav-link>
+    </div>
 
+    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+        <jet-nav-link :href="route('appointments.index')" :active="route().current('appointments.index')">
+            Вождение
+        </jet-nav-link>
+    </div>
+
+    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+        <jet-nav-link :href="route('appointments.index')" :active="route().current('appointments.index')">
+            Уроки
+        </jet-nav-link>
+    </div>
+
+    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+        <jet-nav-link :href="route('users.index')" :active="route().current('users.index')">
+            Пользователи
+        </jet-nav-link>
+    </div>
+
+    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+        <jet-nav-link :href="route('users.index')" :active="route().current('users.index')">
+            Группы
+        </jet-nav-link>
+    </div>
+
+    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+        <jet-nav-link :href="route('users.index')" :active="route().current('users.index')">
+            Организация
+        </jet-nav-link>
+    </div>
 </template>
 
 <script>
+import JetNavLink from '@/Jetstream/NavLink.vue';
 export default {
-    name: "AdminNav"
+    components: {
+        JetNavLink,
+    }
 }
 </script>
-
-<style scoped>
-
-</style>
