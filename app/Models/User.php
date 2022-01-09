@@ -6,6 +6,7 @@ use App\Traits\UserActive;
 use App\Traits\UserRoles;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -17,9 +18,10 @@ use Laravel\Sanctum\HasApiTokens;
 /**
  * @property integer role
  * @property boolean active
- * @property int group_id
- * @property int google_id
- * @property int vk_id
+ * @property integer group_id
+ * @property string google_id
+ * @property string vk_id
+ * @property string phone
  */
 class User extends Authenticatable
 {
@@ -44,6 +46,7 @@ class User extends Authenticatable
         'vk_id',
         'google_id',
         'role',
+        'phone',
     ];
 
     /**
@@ -127,5 +130,15 @@ class User extends Authenticatable
     public function isSocialiteUser(): bool
     {
         return $this->vk_id || $this->google_id;
+    }
+
+    /**
+     * Instructor or Student has many
+     *
+     * @return HasMany
+     */
+    public function appointments(): HasMany
+    {
+        return $this->hasMany(Appointment::class);
     }
 }

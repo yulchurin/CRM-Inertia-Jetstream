@@ -2,9 +2,8 @@
 
 namespace App\Providers;
 
-use App\Models\Person;
+use App\Models\Appointment;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -27,6 +26,11 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+
+        Gate::define('update-appointment', function (User $user, Appointment $appointment) {
+            return $user->id === $appointment->student_id ||
+                $appointment->student_id === null;
+        });
 
         Gate::after(function ($user, $ability, $result, $arguments) {
             if ($user->isOwner()) {

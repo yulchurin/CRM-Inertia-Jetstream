@@ -13,6 +13,11 @@ class PaperController extends Controller
 {
     use GetStudent;
 
+    public function __construct()
+    {
+        $this->middleware('phoneFix');
+    }
+
     public function store(PaperRequest $request)
     {
         $student = $this->getStudent();

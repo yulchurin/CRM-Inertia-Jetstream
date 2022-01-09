@@ -24,6 +24,10 @@
                             <template v-if="$page.props.userIsAdmin">
                                 <admin-nav />
                             </template>
+
+                            <template v-if="$page.props.userIsInstructor">
+                                <instructor-nav />
+                            </template>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
@@ -157,6 +161,10 @@
                         <template v-if="$page.props.userIsAdmin">
                             <admin-responsive-nav />
                         </template>
+
+                        <template v-if="$page.props.userIsInstructor">
+                            <instructor-responsive-nav />
+                        </template>
                     </div>
 
                     <!-- Responsive Settings Options -->
@@ -262,18 +270,14 @@ import StudentNav from "@/Layouts/StudentNav";
 import AdminNav from "@/Layouts/AdminNav";
 import AdminResponsiveNav from "@/Layouts/AdminResponsiveNav";
 import StudentResponsiveNav from "@/Layouts/StudentResponsiveNav";
+import InstructorNav from "@/Layouts/InstructorNav";
+import InstructorResponsiveNav from "@/Layouts/InstructorResponsiveNav";
     export default defineComponent({
-        setup() {
-            const auth = computed(() => usePage().props.value.auth.user)
-            return { auth }
-        },
-
         props: {
             title: String,
         },
 
         components: {
-            AdminNav,
             Head,
             JetApplicationMark,
             JetBanner,
@@ -282,9 +286,12 @@ import StudentResponsiveNav from "@/Layouts/StudentResponsiveNav";
             JetNavLink,
             JetResponsiveNavLink,
             Link,
+            AdminNav,
             StudentNav,
             AdminResponsiveNav,
             StudentResponsiveNav,
+            InstructorNav,
+            InstructorResponsiveNav,
         },
 
         data() {

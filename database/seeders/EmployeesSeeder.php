@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Interfaces\UserRole;
 use App\Models\User;
+use Faker\Factory;
 use Illuminate\Database\Seeder;
 
 class EmployeesSeeder extends Seeder
@@ -15,6 +16,8 @@ class EmployeesSeeder extends Seeder
      */
     public function run()
     {
+        $faker = Factory::create();
+
         User::factory(1)
             ->sequence(fn () => ['role' => UserRole::OWNER])
             ->create([
@@ -33,12 +36,14 @@ class EmployeesSeeder extends Seeder
             ->sequence(fn () => ['role' => UserRole::TEACHER])
             ->create([
                 'active' => true,
+                'phone' => $faker->numerify('937#######')
             ]);
 
         User::factory(5)
             ->sequence(fn () => ['role' => UserRole::INSTRUCTOR])
             ->create([
                 'active' => true,
+                'phone' => $faker->numerify('917#######')
             ]);
     }
 }

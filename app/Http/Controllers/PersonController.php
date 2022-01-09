@@ -18,6 +18,11 @@ class PersonController extends Controller
 {
     use GetStudent;
 
+    public function __construct()
+    {
+        $this->middleware('phoneFix')->except('index');
+    }
+
     /**
      * Store a newly created resource in storage.
      *

@@ -14,7 +14,7 @@ class CompanyRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::user()->isOwner();
+        return $this->user()->isOwner();
     }
 
     /**

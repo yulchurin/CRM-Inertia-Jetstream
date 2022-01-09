@@ -11,9 +11,9 @@ class UserRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return false;
+        return $this->user()->isAdmin() || $this->user()->isOwner();
     }
 
     /**
@@ -24,7 +24,10 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => 'string',
+            'email' => 'email',
+            'password' => 'string',
+            'role' => 'numeric',
         ];
     }
 }

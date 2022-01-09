@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @property int id
  * @property int user_id
- * @property int number
+ * @property string number
  * @property int final_grade
  * @property Carbon created_at
  * @property Carbon updated_at

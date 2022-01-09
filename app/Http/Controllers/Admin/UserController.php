@@ -25,7 +25,7 @@ class UserController extends Controller
     {
         $users = User::paginate(10);
 
-        $users = (new UserCollection($users))->resource;
+        $users = (new UserCollection($users));
 
         return inertia('Users/Index', [
             'users' => $users,

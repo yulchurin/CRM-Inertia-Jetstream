@@ -5,18 +5,8 @@ namespace App\Rules;
 use App\Services\SnilsValidator;
 use Illuminate\Contracts\Validation\Rule;
 
-class snilsValidation implements Rule
+class SnilsValidation implements Rule
 {
-    /**
-     * Create a new rule instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
     /**
      * Determine if the validation rule passes.
      *
@@ -24,7 +14,7 @@ class snilsValidation implements Rule
      * @param  mixed  $value
      * @return bool
      */
-    public function passes($attribute, $value)
+    public function passes($attribute, $value): bool
     {
         return SnilsValidator::validate($value);
     }
@@ -34,7 +24,7 @@ class snilsValidation implements Rule
      *
      * @return string
      */
-    public function message()
+    public function message(): string
     {
         return 'СНИЛС некорректный!';
     }

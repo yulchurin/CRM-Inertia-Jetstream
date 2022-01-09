@@ -68,5 +68,8 @@ class Kernel extends HttpKernel
         'user.active' => \App\Http\Middleware\UserActiveMiddleware::class,
         'management' => \App\Http\Middleware\ManagementRoutesMiddleware::class,
         'phoneFix' => \App\Http\Middleware\PhoneNumberFix::class,
+        'priceFix' => \App\Http\Middleware\PriceFix::class,
+        'appointment.limit' => \App\Http\Middleware\AppointmentLimitations::class,
+        'instructor' => \App\Http\Middleware\IsInstructor::class,
     ];
 }

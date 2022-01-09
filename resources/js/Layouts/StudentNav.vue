@@ -12,11 +12,11 @@
         </jet-nav-link>
     </div>
 
-    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-        <jet-nav-link :href="route('appointments.index')" :active="route().current('appointments.index')">
-            Уроки
-        </jet-nav-link>
-    </div>
+<!--    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">-->
+<!--        <jet-nav-link :href="route('lessons.index')" :active="route().current('lessons.index')">-->
+<!--            Уроки-->
+<!--        </jet-nav-link>-->
+<!--    </div>-->
 </template>
 
 <script>

@@ -21,6 +21,9 @@
                                 <th scope="col" class="relative px-6 py-3">
                                     <span class="sr-only">Edit</span>
                                 </th>
+                                <th scope="col" class="relative px-6 py-3">
+                                    <span class="sr-only">Delete</span>
+                                </th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -29,7 +32,7 @@
                                 <div class="flex items-center">
                                     <div class="ml-4">
                                         <div class="text-sm font-medium text-gray-900">
-                                            {{ schedule.time }}
+                                            {{ schedule.start }}
                                         </div>
                                         <div class="text-sm text-gray-500">
                                             est. ends {{ schedule.estimated }}
@@ -44,7 +47,15 @@
                                 <div class="text-sm text-gray-900">{{ schedule.estimated }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                <Link :href="route('schedules.show', { id: schedule.id })"
+                                    class="text-indigo-600 hover:text-indigo-900 cursor-pointer"
+                                >Edit</Link>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <a
+                                    @click="destroy(schedule)"
+                                    class="text-indigo-600 hover:text-indigo-900 cursor-pointer"
+                                >Delete</a>
                             </td>
                         </tr>
                         </tbody>
@@ -56,9 +67,24 @@
 </template>
 
 <script>
+import JetConfirmationModal from '@/Jetstream/ConfirmationModal.vue';
+import { Link } from '@inertiajs/inertia-vue3'
 export default {
     props: {
         schedules: Object,
+        message: String,
+        status: String,
     },
+    components: {
+        JetConfirmationModal,
+        Link,
+    },
+    methods: {
+        destroy: function (data) {
+            if (!confirm('Are you sure want to remove?')) return;
+            data._method = 'DELETE';
+            this.$inertia.post('/admin/schedules/' + data.id, data);
+        }
+    }
 }
 </script>

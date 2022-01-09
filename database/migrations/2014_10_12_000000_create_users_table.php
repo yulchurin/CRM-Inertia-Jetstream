@@ -27,6 +27,7 @@ class CreateUsersTable extends Migration
             $table->string('google_id')->nullable();
             $table->string('vk_id')->nullable();
             $table->tinyInteger('role')->default(30);
+            $table->string('phone', 10)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

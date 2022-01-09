@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Carbon;
 
 class ScheduleResource extends JsonResource
 {
@@ -16,20 +17,10 @@ class ScheduleResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'time' => $this->start?->format('H:i'),
-            'duration' => static::secondsToHours($this->duration),
+            'start' => $this->start?->format('H:i'),
+            'duration' => Carbon::parse($this->duration)->format('H:i'),
             'estimated' => $this->start?->addSeconds($this->duration)?->format('H:i'),
         ];
     }
 
-    private static function secondsToHours(int $seconds): string
-    {
-        $sec = $seconds % 60;
-        $min = ($seconds-$sec) / 60;
-        $minutes = $min % 60;
-        $hours = ($min - $minutes) / 60;
-
-        $minutes = $minutes < 10 ? "0$minutes" : $minutes;
-        return "$hours:$minutes";
-    }
 }

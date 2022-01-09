@@ -1,26 +1,33 @@
 <template>
-    <app-layout title="Profile">
+    <app-layout title="users">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Profile
+                Schedule
             </h2>
         </template>
-        {{ user.name }}
+        <div>
+            <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+                <schedule-form :schedule="schedule" />
+                <jet-section-border />
+            </div>
+        </div>
     </app-layout>
 </template>
 
 <script>
 import { defineComponent } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
+import ScheduleForm from '@/Pages/Schedule/Form.vue'
+import JetSectionBorder from '@/Jetstream/SectionBorder.vue'
 
 export default defineComponent({
     props: {
-        user: Object,
-
+        schedule: Object,
     },
-
     components: {
         AppLayout,
+        JetSectionBorder,
+        ScheduleForm,
     },
 })
 </script>

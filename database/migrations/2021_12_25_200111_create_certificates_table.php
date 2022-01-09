@@ -16,7 +16,7 @@ class CreateCertificatesTable extends Migration
         Schema::create('certificates', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->unsignedBigInteger('number')->unique();
+            $table->string('number', 25)->unique();
             $table->unsignedTinyInteger('final_grade');
             $table->timestamps();
             $table->softDeletes();

@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\DrivingController;
+use App\Http\Controllers\Admin\GroupController;
 use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
@@ -21,7 +22,8 @@ Route::prefix('admin')
 
             Route::apiResource('/driving', DrivingController::class);
 
-            Route::apiResource('/schedules', ScheduleController::class);
+            Route::resource('/schedules', ScheduleController::class)->except(['update', 'edit']);
+            Route::resource('/groups', GroupController::class)->except(['update', 'edit']);
 
             // courses
             // lessons

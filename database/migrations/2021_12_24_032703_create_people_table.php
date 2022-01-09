@@ -33,7 +33,7 @@ class CreatePeopleTable extends Migration
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->date('date_of_birth');
-            $table->string('phone', 18)->unique();
+            $table->string('phone', 10)->unique();
 
             $table->string('zip', 50)->nullable();
             $table->string('region', 255)->nullable();

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\Paper;
 use App\Models\Student;
-use App\Rules\snilsValidation;
+use App\Rules\SnilsValidation;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -41,7 +41,7 @@ class PaperRequest extends FormRequest
                 'required',
                 'digits:11',
                 Rule::unique('papers')->ignore($student->person->id, 'person_id'),
-                new snilsValidation(),
+                new SnilsValidation(),
             ]
         ];
     }

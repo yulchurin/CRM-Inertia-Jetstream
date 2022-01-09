@@ -2,15 +2,14 @@
     <app-layout title="users">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Usr
+                Users
             </h2>
         </template>
-        <p>Hello, {{ auth.name }}</p>
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <list :users="users.data" />
-                    <pagination class="mt-6" :links="users.links" />
+                    <pagination class="mt-6" :links="users.meta.links" />
                 </div>
             </div>
         </div>

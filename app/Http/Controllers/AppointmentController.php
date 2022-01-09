@@ -2,62 +2,93 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AppointmentRequest;
+use App\Http\Resources\AppointmentCollection;
+use App\Http\Resources\InstructorScheduleCollection;
+use App\Http\Resources\PlaceCollection;
+use App\Models\Appointment;
+use App\Models\Place;
+use App\Models\Student;
+use App\Services\LimitAppointment;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
+use Inertia\Response;
+use Inertia\ResponseFactory;
 
 class AppointmentController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @return Response|ResponseFactory
      */
-    public function index()
+    public function index(): Response|ResponseFactory
     {
-        //
+        $availableSlots = Appointment::with(['schedule', 'group', 'instructor', 'vehicle', 'place'])
+            ->available()
+            ->paginate(20);
+
+        $available = (new AppointmentCollection($availableSlots));
+
+        return inertia('Appointments/Index', [
+            'appointments' => $available,
+            'places' => new PlaceCollection(Place::all()),
+            'limited' => LimitAppointment::all(),
+        ]);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param AppointmentRequest $request
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function book(AppointmentRequest $request): RedirectResponse
     {
-        //
+        $validated = $request->validated();
+
+        $appointment = Appointment::find($validated['id']);
+        $appointment->place()->associate(Place::find($validated['place']));
+        $appointment->student()->associate(Student::find(Auth::id()));
+        $appointment->comment = $validated['comment'];
+
+        $appointment->save();
+        Log::channel('user_actions')->info(Auth::id() . ': ' .json_encode($request->validated()));
+        return back()->with('status', 'appointment-created');
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
-    public function show($id)
+    public function unbook(Request $request)
     {
-        //
+        $appointment = Appointment::find($request->id);
+
+        $this->authorize('update-appointment', $appointment);
+
+        $appointment->student()->dissociate();
+        $appointment->comment = null;
+        $appointment->save();
+
+        Log::channel('user_actions')->info(Auth::id() . ': cancelled ' . $request->id);
+        return back()->with('status', 'appointment-deleted');
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function instructorView()
     {
-        //
-    }
+        $appointments = Appointment::ofThisInstructor()
+            ->ofThisWeekAndHigher()
+            ->onlyBooked()
+            ->with(['schedule', 'group', 'student', 'vehicle', 'place'])
+            ->paginate(30);
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        $appointments = (new InstructorScheduleCollection($appointments));
+
+        return inertia('Appointments/Instructor', [
+            'appointments' => $appointments,
+        ]);
     }
 }

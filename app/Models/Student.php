@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Scopes\StudentScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
@@ -75,14 +74,6 @@ final class Student extends User
     }
 
     /**
-     * @return HasMany
-     */
-    public function appointments(): HasMany
-    {
-        return $this->hasMany(Appointment::class);
-    }
-
-    /**
      * Selects only students from users table
      *
      * UserRole::STUDENT | GRADUATED | ENROLLEE
@@ -91,7 +82,7 @@ final class Student extends User
      */
     protected static function booted()
     {
-        Student::addGlobalScope(new StudentScope());
+        //Student::addGlobalScope(new StudentScope());
     }
 
     /**

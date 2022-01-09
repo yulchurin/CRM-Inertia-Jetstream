@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
 class ScheduleRequest extends FormRequest
 {
@@ -12,9 +11,9 @@ class ScheduleRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return Auth::user()->isOwner() || Auth::user()->isAdmin();
+        return $this->user()->isOwner() || $this->user()->isAdmin();
     }
 
     /**
@@ -22,11 +21,11 @@ class ScheduleRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'start' => 'required|date_format:H:i',
-            'duration' => 'required|numeric|min:600|max:65535',
+            'duration' => 'required|date_format:H:i',
         ];
     }
 }

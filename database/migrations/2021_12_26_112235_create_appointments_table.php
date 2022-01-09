@@ -16,20 +16,21 @@ class CreateAppointmentsTable extends Migration
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
             $table->date('date');
+            $table->tinyInteger('status')->nullable();
             $table->foreignId('group_id')->nullable()->constrained();
             $table->foreignId('vehicle_id')->constrained();
-            $table->foreignId('driving_schedule_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('schedule_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('place_id')->nullable()->constrained();
 
             $table->unsignedBigInteger('student_id')->nullable();
-            $table->unsignedBigInteger('instructor');
+            $table->unsignedBigInteger('instructor_id');
 
             $table->string('comment')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('student_id')->references('id')->on('users');
-            $table->foreign('instructor')->references('id')->on('users');
+            $table->foreign('instructor_id')->references('id')->on('users');
         });
     }
 
