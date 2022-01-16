@@ -7,9 +7,6 @@
         Пользователи
     </jet-responsive-nav-link>
 
-    <jet-responsive-nav-link :href="route('appointments.index')" :active="route().current('appointments.index')">
-        Вождение
-    </jet-responsive-nav-link>
 </template>
 
 <script>

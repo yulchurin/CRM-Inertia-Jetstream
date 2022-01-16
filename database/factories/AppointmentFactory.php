@@ -18,7 +18,7 @@ class AppointmentFactory extends Factory
             'date' => $this->faker->dateTimeBetween('-1 year', '+2 weeks'),
             'group_id' => $this->faker->numberBetween(1, 6),
             'vehicle_id' => $this->faker->randomDigitNotNull,
-            'driving_schedule_id' => $this->faker->numberBetween(1, 10),
+            'schedule_id' => $this->faker->numberBetween(1, 10),
             'place_id' => $this->faker->numberBetween(1, 9),
             'student_id' => $this->faker->numberBetween(20, 60),
             'instructor_id' => $this->faker->numberBetween(6, 10),

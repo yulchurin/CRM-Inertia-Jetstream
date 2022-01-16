@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Appointment;
-use App\Rules\AppointmentWeeklyLimitation;
+use App\Services\AppointmentLimitations;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AppointmentRequest extends FormRequest
@@ -17,8 +17,9 @@ class AppointmentRequest extends FormRequest
     {
         $appointment = Appointment::find($this->id);
 
-        return $this->user()->id === $appointment->student_id
-            || $appointment->student_id === null;
+        return (! AppointmentLimitations::all()) &&
+            ($this->user()->id === $appointment->student_id
+                || $appointment->student_id === null);
     }
 
     /**

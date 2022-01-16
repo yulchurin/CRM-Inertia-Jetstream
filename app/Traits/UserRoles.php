@@ -4,6 +4,8 @@ namespace App\Traits;
 
 use App\Interfaces\UserRole;
 use App\Services\UserRoleService;
+use Illuminate\Support\Str;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * User roles with limitations...
@@ -86,7 +88,24 @@ trait UserRoles
         return $this->role === UserRole::GRADUATED;
     }
 
+    /**
+     * Same as isClient() TODO: remove one
+     *
+     * @return bool
+     */
+    #[Pure]
     public function mayHavePerson(): bool
+    {
+        return $this->isEnrollee() ||
+            $this->isStudent() ||
+            $this->isGraduated();
+    }
+
+    /**
+     * @return bool
+     */
+    #[Pure]
+    public function isClient(): bool
     {
         return $this->isEnrollee() ||
             $this->isStudent() ||
@@ -96,12 +115,14 @@ trait UserRoles
     /**
      * Determine whether user has given role
      *
-     * @param int $role
+     * @param string $role
      * @return bool
      */
-    public function hasRole(int $role): bool
+    public function hasRole(string $role): bool
     {
-        return $this->role === $role;
+        $role = Str::upper($role);
+
+        return $this->getRoleName() === $role;
     }
 
     /**

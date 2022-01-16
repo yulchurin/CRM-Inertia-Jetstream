@@ -16,6 +16,7 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
+ * @property integer id
  * @property integer role
  * @property boolean active
  * @property integer group_id
@@ -140,5 +141,22 @@ class User extends Authenticatable
     public function appointments(): HasMany
     {
         return $this->hasMany(Appointment::class);
+    }
+
+    /**
+     * Returns user model as Student model
+     *
+     * @return Student
+     */
+    public function getAsStudent(): Student
+    {
+        return Student::where('id', '=', $this->id)
+            ->with([
+                'group',
+                'person',
+                'paper',
+                'legalRepresentativePerson',
+                'certificate',
+            ])->first();
     }
 }

@@ -31,6 +31,15 @@ class AppointmentResource extends JsonResource
                     Str::substr($this->instructor?->phone, 6, 2) .'-'.
                     Str::substr($this->instructor?->phone, 8, 2),
             ],
+            'student' => $this->student ? [
+                'name' => $this->student?->name,
+                'link' => $this->student?->person?->phone,
+                'phone' => '(' .
+                    Str::substr($this->student?->person?->phone, 0, 3) .') '.
+                    Str::substr($this->student?->person?->phone, 3, 3) .'-'.
+                    Str::substr($this->student?->person?->phone, 6, 2) .'-'.
+                    Str::substr($this->student?->person?->phone, 8, 2),
+            ] : null,
             'date' => $this->date?->format('d.m.Y'),
             'start' => $this->schedule?->start?->format('H:i'),
             'dayOfWeek' => $weekMap[$this->date?->dayOfWeek],

@@ -23,28 +23,28 @@ class SnilsValidator
         $snils = Str::reverse($snils);
         $snilsDigitsArray = array_map('intval', str_split($snils));
 
-        $checksumExpected = 0;
+        $checksumCalculated = 0;
         for ($multiplier = 1; $multiplier < 10; ++$multiplier) {
-            $checksumExpected += $multiplier * $snilsDigitsArray[$multiplier-1];
+            $checksumCalculated += $snilsDigitsArray[$multiplier - 1] * $multiplier;
         }
 
-        return static::getExpected($checksumExpected) === $checksum;
+        return static::getExpected($checksumCalculated) === $checksum;
     }
 
     /**
      * Recursively gets expected checksum
      *
-     * @param $checkSumExpected
+     * @param $calculated
      * @return int
      */
-    private static function getExpected($checkSumExpected): int
+    private static function getExpected($calculated): int
     {
-        if ($checkSumExpected < 100) {
-            return $checkSumExpected;
-        } elseif ($checkSumExpected === 100 || $checkSumExpected === 101) {
+        if ($calculated < 100) {
+            return $calculated;
+        } elseif ($calculated === 100 || $calculated === 101) {
             return 0;
         } else {
-            return static::getExpected($checkSumExpected % 101);
+            return static::getExpected($calculated % 101);
         }
     }
 }

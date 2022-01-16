@@ -100,13 +100,15 @@ class Appointment extends Model
     public function scopeAvailable($query): mixed
     {
         return $query
-            ->where('group_id', Auth::user()?->group_id)
-            ->whereDate(
-                'date', '>', Carbon::now(config('app.timezone'))
-                    ->addHours(config('appointment.start.hours_before'))
-            )
-            ->whereNull('student_id')
-            ->orWhere('student_id', '=', Auth::id())
+            ->where(function ($query) {
+                $query->whereNull('group_id')
+                    ->orWhere('group_id', Auth::user()?->group_id);
+            })
+            ->where(function ($query) {
+                $query->whereNull('student_id')
+                    ->orWhere('student_id', '=', Auth::id());
+            })
+            ->where('date', '>', Carbon::now()->addHours(config('appointment.start.hours_before')))
             ->orderBy('date')
             ->orderBy('schedule_id');
     }

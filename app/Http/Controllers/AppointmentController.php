@@ -4,18 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AppointmentRequest;
 use App\Http\Resources\AppointmentCollection;
-use App\Http\Resources\InstructorScheduleCollection;
 use App\Http\Resources\PlaceCollection;
 use App\Models\Appointment;
 use App\Models\Place;
 use App\Models\Student;
-use App\Services\LimitAppointment;
+use App\Services\AppointmentLimitations;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Inertia\Response;
 use Inertia\ResponseFactory;
@@ -36,7 +33,7 @@ class AppointmentController extends Controller
         return inertia('Appointments/Index', [
             'appointments' => $available,
             'places' => new PlaceCollection(Place::all()),
-            'limited' => LimitAppointment::all(),
+            'limited' => AppointmentLimitations::all(),
         ]);
     }
 
@@ -68,7 +65,6 @@ class AppointmentController extends Controller
         $appointment = Appointment::find($request->id);
 
         $this->authorize('update-appointment', $appointment);
-
         $appointment->student()->dissociate();
         $appointment->comment = null;
         $appointment->save();
@@ -77,6 +73,11 @@ class AppointmentController extends Controller
         return back()->with('status', 'appointment-deleted');
     }
 
+    /**
+     * Returns view for instructor
+     *
+     * @return Response|ResponseFactory
+     */
     public function instructorView()
     {
         $appointments = Appointment::ofThisInstructor()
@@ -85,7 +86,7 @@ class AppointmentController extends Controller
             ->with(['schedule', 'group', 'student', 'vehicle', 'place'])
             ->paginate(30);
 
-        $appointments = (new InstructorScheduleCollection($appointments));
+        $appointments = (new AppointmentCollection($appointments));
 
         return inertia('Appointments/Instructor', [
             'appointments' => $appointments,

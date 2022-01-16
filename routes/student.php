@@ -5,8 +5,7 @@ use App\Http\Controllers\PaperController;
 use App\Http\Controllers\PersonController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth:sanctum', 'user.inactive'])->group(function () {
-
+Route::middleware(['auth:sanctum', 'user.inactive', 'role:client'])->group(function () {
     Route::apiResource('/person', PersonController::class)->only(['store', 'index']);
     Route::apiResource('/papers', PaperController::class)->only(['store']);
 

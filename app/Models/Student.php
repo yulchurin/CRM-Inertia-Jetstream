@@ -66,11 +66,25 @@ final class Student extends User
     }
 
     /**
+     * Student belongs to one group
+     *
      * @return BelongsTo
      */
     public function group(): BelongsTo
     {
         return $this->belongsTo(Group::class);
+    }
+
+    /**
+     * Student has one Limit model,
+     * that contains three types of limitations -
+     * per day, per week and per month
+     *
+     * @return HasOne
+     */
+    public function limit(): HasOne
+    {
+        return $this->hasOne(Limit::class);
     }
 
     /**

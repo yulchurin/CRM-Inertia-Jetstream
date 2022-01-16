@@ -27,7 +27,7 @@ class PersonFactory extends Factory
             'first_name' => $this->faker->firstName(),
             'middle_name' => $this->faker->firstNameMale(),
             'date_of_birth' => $this->faker->dateTimeBetween('-70 years', '-17 years'),
-            'phone' => $this->faker->e164PhoneNumber(),
+            'phone' => $this->faker->numerify('999#######'),
             'zip' => $this->faker->postcode(),
             'region' => $this->faker->country(),
             'city' => $this->faker->city(),

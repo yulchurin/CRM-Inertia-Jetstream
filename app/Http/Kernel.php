@@ -69,7 +69,7 @@ class Kernel extends HttpKernel
         'management' => \App\Http\Middleware\ManagementRoutesMiddleware::class,
         'phoneFix' => \App\Http\Middleware\PhoneNumberFix::class,
         'priceFix' => \App\Http\Middleware\PriceFix::class,
-        'appointment.limit' => \App\Http\Middleware\AppointmentLimitations::class,
-        'instructor' => \App\Http\Middleware\IsInstructor::class,
+        'appointment.limit' => \App\Http\Middleware\HandleAppointmentLimitations::class,
+        'role' => \App\Http\Middleware\EnsureUserHasRole::class,
     ];
 }
