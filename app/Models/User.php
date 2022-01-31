@@ -2,21 +2,28 @@
 
 namespace App\Models;
 
-use App\Models\Role;
-use Exception;
-use Illuminate\Database\Eloquent\Builder;
+use App\Traits\UserActive;
+use App\Traits\UserRoles;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * @property integer id
+ * @property integer role
+ * @property boolean active
+ * @property integer group_id
+ * @property string google_id
+ * @property string vk_id
+ * @property string phone
+ */
 class User extends Authenticatable
 {
     use HasApiTokens;
@@ -25,6 +32,7 @@ class User extends Authenticatable
     use Notifiable;
     use TwoFactorAuthenticatable;
     use SoftDeletes;
+    use UserRoles, UserActive;
 
     /**
      * The attributes that are mass assignable.
@@ -35,6 +43,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'profile_photo_path',
+        'vk_id',
+        'google_id',
+        'role',
+        'phone',
     ];
 
     /**
@@ -56,6 +69,8 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'active' => 'boolean',
+        'role' => 'integer'
     ];
 
     /**
@@ -65,94 +80,83 @@ class User extends Authenticatable
      */
     protected $appends = [
         'profile_photo_url',
+        'permissions',
     ];
 
     /**
-     * User has a Person
+     * Permissions Scope
      *
-     * @return HasOne
+     * @return Attribute
      */
-    public function person(): HasOne
+    protected function permissions(): Attribute
     {
-        return $this->hasOne(Person::class);
+        return new Attribute(
+            get: fn() => [
+                'users' => [
+                    'index' => $this->can('viewAny', User::class),
+                    'view' => $this->can('view', [$this, User::class]),
+                    'create' => $this->can('create', User::class),
+                    'update' => $this->can('update', [$this, User::class]),
+                    'delete' => $this->can('delete', [$this, User::class]),
+                ],
+            ]
+        );
     }
 
     /**
-     * User has a Paper
+     * Hack for Socialite user avatars...
      *
-     * @return HasOneThrough
+     * @return mixed
      */
-    public function paper(): HasOneThrough
+    public function getProfilePhotoUrlAttribute(): mixed
     {
-        return $this->hasOneThrough(Paper::class, Person::class);
+        $path = $this->profile_photo_path;
+
+        if (Storage::disk($this->profilePhotoDisk())->exists($path)){
+            return Storage::disk($this->profilePhotoDisk())->url($this->profile_photo_path);
+        } elseif (!empty($path)) {
+            // Use Photo URL from Social sites link...
+            return $path;
+        } else {
+            //empty path. Use defaultProfilePhotoUrl
+            return $this->defaultProfilePhotoUrl();
+        }
     }
 
     /**
-     * User has a Person
+     * Determines whether user logged in using social networks
      *
-     * @return HasOne
+     * @return bool
      */
-    public function legalRepresentative(): HasOne
+    public function isSocialiteUser(): bool
     {
-        return $this->hasOne(LegalRepresentative::class);
+        return $this->vk_id || $this->google_id;
     }
 
     /**
-     * Returns parent's or legal representative's personality
+     * Instructor or Student has many
      *
-     * @return HasOneThrough
+     * @return HasMany
      */
-    public function legalRepresentativePerson(): HasOneThrough
+    public function appointments(): HasMany
     {
-        return $this->hasOneThrough(Person::class, LegalRepresentative::class)->with('paper');
+        return $this->hasMany(Appointment::class);
     }
 
     /**
-     * Certificate relation
+     * Returns user model as Student model
      *
-     * @return HasOne
+     * @return Student
      */
-    public function certificate(): HasOne
+    public function getAsStudent(): Student
     {
-        return $this->hasOne(Certificate::class);
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function group(): BelongsTo
-    {
-        return $this->belongsTo(Group::class);
-    }
-
-    /**
-     * Scope a query to only include active users.
-     *
-     * @param Builder $query
-     * @return void
-     */
-    public function scopeActive(Builder $query): void
-    {
-        $query->where('active', true);
-    }
-
-    /**
-     * Check user's role: Admin or Not
-     *
-     * @return boolean
-     */
-    public function isAdmin(): bool
-    {
-        return Auth::user()->role === Role::ADMIN;
-    }
-
-    /**
-     * Check user's role: Assistant or Not
-     *
-     * @return boolean
-     */
-    public function isAssistant(): bool
-    {
-        return Auth::user()->role === Role::ASSISTANT;
+        return Student::where('id', '=', $this->id)
+            ->with([
+                'group',
+                'person',
+                'paper',
+                'legalRepresentativePerson',
+                'certificate',
+            ])->first();
     }
 }

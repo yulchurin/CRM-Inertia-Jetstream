@@ -6,7 +6,9 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Group
@@ -14,7 +16,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * NOTE: ALL prices are in kopecks !!!
  * because php don't support decimals
  * trim last two symbols to convert into RUB
- * btw using float in finance is a bad idea
  *
  * @property int id
  * @property string title
@@ -48,11 +49,22 @@ class Group extends Model
     ];
 
     /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'base_price' => 'integer',
+        'price_per_driving_hour' => 'integer',
+        'drive_hours' => 'integer'
+    ];
+
+    /**
      * @return HasMany
      */
-    public function user(): HasMany
+    public function student(): HasMany
     {
-        return $this->hasMany(User::class);
+        return $this->hasMany(Student::class);
     }
 
     /**
@@ -64,6 +76,18 @@ class Group extends Model
     }
 
     /**
+     * Group has one Limit model,
+     * that contains three types of limitations -
+     * per day, per week, per month
+     *
+     * @return HasOne
+     */
+    public function limit(): HasOne
+    {
+        return $this->hasOne(Limit::class);
+    }
+
+    /**
      * Get full price
      *
      * @return int
@@ -71,5 +95,26 @@ class Group extends Model
     public function getFullPriceAttribute(): int
     {
         return $this->price_per_driving_hour * $this->drive_hours + $this->base_price;
+    }
+
+    /**
+     * Gets drive hours
+     *
+     * @return int
+     */
+    public function getDriveHours(): int
+    {
+        return $this->drive_hours;
+    }
+
+    /**
+     * @param $query
+     * @return mixed
+     */
+    public function scopeOfThisStudent($query): mixed
+    {
+        $student = Auth::user()->getAsStudent();
+
+        return $query->where('id', '=', $student->group?->id);
     }
 }

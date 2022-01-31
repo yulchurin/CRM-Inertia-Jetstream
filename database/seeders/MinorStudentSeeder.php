@@ -2,14 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Interfaces\UserRole;
 use App\Models\Group;
 use App\Models\LegalRepresentative;
 use App\Models\Paper;
 use App\Models\Person;
-use App\Models\Role;
-use App\Models\User;
+use App\Models\Student;
 use Faker\Factory;
-use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
 
 class MinorStudentSeeder extends Seeder
@@ -24,8 +23,8 @@ class MinorStudentSeeder extends Seeder
         $faker = Factory::create();
 
         Group::factory(1)->has(
-            User::factory(5)
-                ->sequence(fn () => ['role' => Role::STUDENT])
+            Student::factory(5)
+                ->sequence(fn () => ['role' => UserRole::STUDENT])
                 ->has(Person::factory(1)
                     ->sequence(fn () => [
                         'date_of_birth' => $faker->dateTimeBetween('-17 years', '-16 years')

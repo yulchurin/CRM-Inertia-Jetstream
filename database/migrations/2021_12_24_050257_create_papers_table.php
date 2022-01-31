@@ -16,11 +16,12 @@ class CreatePapersTable extends Migration
         Schema::create('papers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('person_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->string('series', 10);
-            $table->string('number', 10);
+            $table->string('series', 4);
+            $table->string('number', 6);
             $table->string('issuer', 100);
             $table->date('issuance_date');
-            $table->string('place_of_birth', 100);
+            $table->string('place_of_birth', 100)->nullable();
+            $table->string('snils', 11)->nullable()->unique();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -17,7 +17,14 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/dashboard';
+    public const HOME = '/';
+
+    /**
+     * This is used by Laravel authentication to redirect INACTIVE users after login
+     *
+     * @var string
+     */
+    public const INACTIVE = '/inactive';
 
     /**
      * The controller namespace for the application.

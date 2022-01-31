@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Appointment;
 use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
@@ -14,7 +15,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        // 'App\Models\User' => 'App\Policies\UserPolicy',
     ];
 
     /**
@@ -26,14 +27,15 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        /**
-         * Global Admin check
-         * Allows all methods for Admin
-         *
-         * @return boolean
-         */
-        Gate::before(function (User $user) {
-            return $user->isAdmin();
+        Gate::define('update-appointment', function (User $user, Appointment $appointment) {
+            return $user->id === $appointment->student_id ||
+                $appointment->student_id === null;
+        });
+
+        Gate::after(function ($user, $ability, $result, $arguments) {
+            if ($user->isOwner()) {
+                return true;
+            }
         });
     }
 }

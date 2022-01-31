@@ -2,12 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Interfaces\UserRole;
 use App\Models\Certificate;
 use App\Models\Group;
 use App\Models\Paper;
 use App\Models\Person;
-use App\Models\Role;
-use App\Models\User;
+use App\Models\Student;
 use Carbon\Carbon;
 use Faker\Factory;
 use Illuminate\Database\Seeder;
@@ -33,11 +33,11 @@ class GraduatedSeeder extends Seeder
 
         $id = DB::getPdo()->lastInsertId();
 
-        User::factory(10)
+        Student::factory(10)
+            ->sequence(fn () => ['role' => UserRole::GRADUATED])
             ->has(Person::factory()->count(1)->has(Paper::factory()->count(1)))
             ->has(Certificate::factory()->count(1))
             ->create([
-                'role' => Role::GRADUATED,
                 'group_id' => $id,
             ]);
     }

@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Person;
+use App\Models\Student;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -30,8 +31,7 @@ class PersonPolicy
      */
     public function view(User $user, Person $person)
     {
-        return ($user->legalRepresentative()->id === $person->legal_representative_id)
-            || ($user->id === $person->user_id);
+        //
     }
 
     /**
@@ -42,11 +42,9 @@ class PersonPolicy
      */
     public function create(User $user)
     {
-        return (! $user->person()->exists());
-        //$user->person()
-        //todo: if age was under 18 when the group was started
-        // then user can create a person as a legal representative
-        // JUST ONE Person and JUST ONE LEGAL REPRESENTATIVE !
+        $student = Student::find($user->id);
+        return (! $student->person()->exists()) ||
+            ($student->isMinor() && (! $student->legalRepresentativePerson()->exists()));
     }
 
     /**
@@ -58,7 +56,11 @@ class PersonPolicy
      */
     public function update(User $user, Person $person)
     {
-        //
+        $student = Student::find($user->id);
+
+        return $user->id === $person?->user_id ||
+            $user->isAdmin() ||
+            $person->legal_representative_id === $student?->legalRepresentative?->id;
     }
 
     /**

@@ -36,9 +36,9 @@ class MoneyTransformer
     }
 
     #[Pure]
-    public function getTotalStringWithSymbol(): string
+    public static function getStringWithSymbol($value): string
     {
-        $number = self::split($this->value);
+        $number = self::split($value);
         $formatted = number_format((float) $number, 2, ',', ' ');
         return $formatted . ' ₽';
     }

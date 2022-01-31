@@ -2,7 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -37,7 +39,20 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request)
     {
         return array_merge(parent::share($request), [
-            //
+            // Synchronously
+            'appName' => config('app.name'),
+
+            // Lazily
+            'auth.user' => fn () => $request->user()
+                ? $request->user()->only('id', 'name', 'email')
+                : null,
+
+            'role' => Auth::user()?->getRoleName(),
+            'socialite' => Auth::user()?->isSocialiteUser(),
+            'userIsStudent' => Auth::user()?->mayHavePerson(),
+            'userIsMinor' => Student::find(Auth::id())?->isMinor(),
+            'userIsAdmin' => Auth::user()?->isAdmin() || Auth::user()?->isOwner(),
+            'userIsInstructor' => Auth::user()?->isInstructor(),
         ]);
     }
 }

@@ -14,7 +14,7 @@
                     <jet-section-border />
                 </div>
 
-                <div v-if="$page.props.jetstream.canUpdatePassword">
+                <div v-if="$page.props.jetstream.canUpdatePassword && !$page.props.socialite">
                     <update-password-form class="mt-10 sm:mt-0" />
 
                     <jet-section-border />

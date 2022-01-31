@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Paper;
+use App\Models\Student;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -41,10 +42,9 @@ class PaperPolicy
      */
     public function create(User $user)
     {
-        return ! $user->paper()->exists();
-        //todo: if underage
-        // can create one more passport that will ve created when Legal Representative was created
-        // LOG!
+        $student = Student::find($user->id);
+        return (! $student->paper()->exists()) ||
+            (! $student->legalRepresentativePerson->paper()->exists());
     }
 
     /**
@@ -56,9 +56,11 @@ class PaperPolicy
      */
     public function update(User $user, Paper $paper)
     {
-        return $user->person()->id === $paper->person_id
-            || $user->legalRepresentativePerson()->id === $paper->person_id;
-        //TODO: LOG!
+        $student = Student::find($user->id);
+
+        return $student->person?->id === $paper->person_id ||
+            $paper->person_id === $student?->legalRepresentativePerson?->id ||
+            $user->isAdmin();
     }
 
     /**

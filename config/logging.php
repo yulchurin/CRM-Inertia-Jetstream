@@ -113,6 +113,24 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        'auth' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/auth.log'),
+            'days' => 90,
+        ],
+
+        'user_actions' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/user_actions.log'),
+            'days' => 365,
+        ],
+
+        'admin_actions' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/admin_actions.log'),
+            'days' => 365,
+        ],
     ],
 
 ];
