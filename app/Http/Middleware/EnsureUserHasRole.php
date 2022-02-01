@@ -21,37 +21,14 @@ class EnsureUserHasRole
      */
     public function handle(Request $request, Closure $next, string $role)
     {
-        if ($role === 'owner' && ! Auth::user()->isOwner()) {
-            abort(403);
-        }
-
-        if ($role === 'admin' && ! Auth::user()->isAdmin()) {
-            abort(403);
-        }
-
-        if ($role === 'instructor' && ! Auth::user()->isInstructor()) {
-            abort(403);
-        }
-
-        if ($role === 'teacher' && ! Auth::user()->isTeacher()) {
-            abort(403);
-        }
-
-        if ($role === 'enrollee' && ! Auth::user()->isEnrollee()) {
-            abort(403);
-        }
-
-        if ($role === 'student' && ! Auth::user()->isStudent()) {
-            abort(403);
-        }
-
-        if ($role === 'graduated' && ! Auth::user()->isGraduated()) {
-            abort(403);
-        }
-
-        if ($role === 'client' && ! Auth::user()->isClient()) {
-            abort(403);
-        }
+        abort_if($role === 'owner' && !auth()->user()->isOwner(), 403);
+        abort_if($role === 'admin' && !auth()->user()->isAdmin(), 403);
+        abort_if($role === 'instructor' && !auth()->user()->isInstructor(), 403);
+        abort_if($role === 'teacher' && !auth()->user()->isTeacher(), 403);
+        abort_if($role === 'enrollee' && !auth()->user()->isEnrollee(), 403);
+        abort_if($role === 'student' && !auth()->user()->isStudent(), 403);
+        abort_if($role === 'graduated' && !auth()->user()->isGraduated(), 403);
+        abort_if($role === 'client' && !auth()->user()->isClient(), 403);
 
         return $next($request);
     }
