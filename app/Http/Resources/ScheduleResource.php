@@ -19,7 +19,7 @@ class ScheduleResource extends JsonResource
             'id' => $this->id,
             'start' => $this->start?->format('H:i'),
             'duration' => Carbon::parse($this->duration)->format('H:i'),
-            'estimated' => $this->start?->addSeconds($this->duration)?->format('H:i'),
+            'estimated' => $this->start?->addMinutes($this->duration)?->format('H:i'),
         ];
     }
 

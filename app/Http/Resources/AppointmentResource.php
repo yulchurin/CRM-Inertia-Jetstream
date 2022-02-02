@@ -43,7 +43,7 @@ class AppointmentResource extends JsonResource
             'date' => $this->date?->format('d.m.Y'),
             'start' => $this->schedule?->start?->format('H:i'),
             'dayOfWeek' => $weekMap[$this->date?->dayOfWeek],
-            'end' => $this->schedule?->start?->addSeconds($this->schedule?->duration)?->format('H:i'),
+            'end' => $this->schedule?->start?->addMinutes($this->schedule?->duration)?->format('H:i'),
             'car' => [
                 'model' => $this->vehicle?->model,
                 'number' => Str::substr($this->vehicle?->number, 0, 1) .' '.
