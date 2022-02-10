@@ -16,7 +16,7 @@ class CreateSchedulesTable extends Migration
         Schema::create('schedules', function (Blueprint $table) {
             $table->id();
             $table->time('start');
-            $table->unsignedSmallInteger('duration'); // max 65535 seconds, approx. 18 hrs.
+            $table->unsignedTinyInteger('duration'); // max 255 minutes, approx. 4.5 hrs. (IRL 2 hours max)
             $table->timestamps();
             $table->softDeletes();
         });
