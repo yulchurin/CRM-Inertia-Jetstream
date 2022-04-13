@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Appointments\BookDrivingLesson;
+use App\Actions\Appointments\CancelBookedDrivingLesson;
+use App\Actions\DTO\DrivingLessonBookingData;
+use App\Actions\Interfaces\MainAction;
 use App\Http\Requests\AppointmentRequest;
 use App\Http\Resources\AppointmentCollection;
 use App\Http\Resources\PlaceCollection;
@@ -39,37 +43,32 @@ class AppointmentController extends Controller
 
     /**
      * @param AppointmentRequest $request
+     * @param MainAction $bookDrivingLesson
      * @return RedirectResponse
      */
-    public function book(AppointmentRequest $request): RedirectResponse
+    public function book(AppointmentRequest $request, MainAction $bookDrivingLesson): RedirectResponse
     {
-        $validated = $request->validated();
+        $validated = new DrivingLessonBookingData($request->validated());
 
-        $appointment = Appointment::find($validated['id']);
-        $appointment->place()->associate(Place::find($validated['place']));
-        $appointment->student()->associate(Student::find(Auth::id()));
-        $appointment->comment = $validated['comment'];
+        $bookDrivingLesson($validated);
 
-        $appointment->save();
-        Log::channel('user_actions')->info(Auth::id() . ': ' .json_encode($request->validated()));
         return back()->with('status', 'appointment-created');
     }
 
     /**
      * @param Request $request
+     * @param CancelBookedDrivingLesson $cancelBookedDrivingLesson
      * @return RedirectResponse
      * @throws AuthorizationException
      */
-    public function unbook(Request $request)
+    public function unbook(Request $request, CancelBookedDrivingLesson $cancelBookedDrivingLesson): RedirectResponse
     {
         $appointment = Appointment::find($request->id);
 
         $this->authorize('update-appointment', $appointment);
-        $appointment->student()->dissociate();
-        $appointment->comment = null;
-        $appointment->save();
 
-        Log::channel('user_actions')->info(Auth::id() . ': cancelled ' . $request->id);
+        $cancelBookedDrivingLesson($appointment);
+
         return back()->with('status', 'appointment-deleted');
     }
 
@@ -78,13 +77,14 @@ class AppointmentController extends Controller
      *
      * @return Response|ResponseFactory
      */
-    public function instructorView()
+    public function instructorView(): Response|ResponseFactory
     {
-        $appointments = Appointment::ofThisInstructor()
+        $appointments = Appointment::query()
+            ->ofThisInstructor()
             ->ofThisWeekAndHigher()
             ->onlyBooked()
             ->with(['schedule', 'group', 'student', 'vehicle', 'place'])
-            ->paginate(30);
+            ->paginate(20);
 
         $appointments = (new AppointmentCollection($appointments));
 
